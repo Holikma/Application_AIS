@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34322.80
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AIS_Login", "AIS_Login\AIS_Login.vcxproj", "{4062C003-EF94-4EBF-AF18-879F25332B88}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4062C003-EF94-4EBF-AF18-879F25332B88}.Debug|x64.ActiveCfg = Debug|x64
+		{4062C003-EF94-4EBF-AF18-879F25332B88}.Debug|x64.Build.0 = Debug|x64
+		{4062C003-EF94-4EBF-AF18-879F25332B88}.Release|x64.ActiveCfg = Release|x64
+		{4062C003-EF94-4EBF-AF18-879F25332B88}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C86F801B-4143-4358-B5A1-0E000F4CCED8}
+	EndGlobalSection
+EndGlobal
