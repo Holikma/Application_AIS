@@ -9,7 +9,6 @@ class AIS_MainWindow : public QMainWindow{
 	private:
 		Ui::AIS_MainWindowClass ui;
 
-	private slots:
 
 	public:
 		AIS_MainWindow(QWidget *parent = nullptr);
