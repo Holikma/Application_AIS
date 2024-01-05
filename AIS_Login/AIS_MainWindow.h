@@ -43,7 +43,6 @@ class Student : public User {
 class Phd_Student : public Student {
 	private:
 		QVector<Subject> Teaching_Subjects;
-
 	public:
 
 };
@@ -59,15 +58,13 @@ class Teacher : public Employee {
 	private:
 		QVector<Subject> Teaching_Subjects;
 	public:
-		void modify_marks(Student student, Subject subject, QString Mark);
+		void Modify_Marks(Student student, Subject subject, QString Mark);
 };
 
 class Administrator : public Employee {
 	private:
 		QVector<User> Users;
 	public:
-		void Add_User(User user);
-		void Delete_User(User user);
 		void Modify_User(User user);
 		void Update_Subjects();
 };
@@ -78,14 +75,9 @@ class AIS_MainWindow : public QMainWindow{
 		Ui::AIS_MainWindowClass ui;
 		QVector<User> Users;
 		QVector<Subject> Subjects;
-
-
 	public:
 		AIS_MainWindow(QWidget *parent = nullptr);
 		~AIS_MainWindow();
-
 		void Load_Users();
 		QVector<User> Get_Users() { return Users; };
-		User Get_User(int index) { return Users[index]; };
-
 };
