@@ -58,4 +58,7 @@
     <None Include="..\..\..\..\..\..\..\Desktop\predmety_1.csv" />
     <None Include="..\..\..\..\..\..\..\Desktop\predmety_2.csv" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="Users.txt" />
+  </ItemGroup>
 </Project>

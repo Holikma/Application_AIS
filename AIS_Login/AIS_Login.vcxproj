@@ -104,6 +104,9 @@
     <None Include="..\..\..\..\..\..\..\Desktop\predmety_1.csv" />
     <None Include="..\..\..\..\..\..\..\Desktop\predmety_2.csv" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="Users.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
     <Import Project="$(QtMsBuild)\qt.targets" />

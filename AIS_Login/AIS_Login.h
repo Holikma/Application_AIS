@@ -10,6 +10,9 @@ class AIS_Login : public QMainWindow{
 
     private:
         Ui::AIS_LoginClass ui;
+        AIS_MainWindow* mainWindow = new AIS_MainWindow();
+    private slots:
+
 
     public:
         AIS_Login(QWidget *parent = nullptr);
