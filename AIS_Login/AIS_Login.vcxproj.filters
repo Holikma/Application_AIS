@@ -55,10 +55,8 @@
     </QtUic>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\..\..\..\..\Desktop\predmety_1.csv" />
-    <None Include="..\..\..\..\..\..\..\Desktop\predmety_2.csv" />
-  </ItemGroup>
-  <ItemGroup>
     <Text Include="Users.txt" />
+    <Text Include="predmety_1.txt" />
+    <Text Include="predmety_2.txt" />
   </ItemGroup>
 </Project>

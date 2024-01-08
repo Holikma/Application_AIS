@@ -1,0 +1,20 @@
+﻿I1-ATCS_C Advanced Topics of Concrete Structures;2023;BCS
+I1-ATS_C Advanced Topics of Structures;2023;BCS
+I1-ATTE_C Advanced Topics of Transportation;2023;BCS
+I1-AHBU Aerodynamika a hydrodynamika budov 1;2023;BCS
+B1-AO Akustika a osvetlenie;2023;BCS
+B1-AA Akustika v architekture 1;2023;PHD
+I1-AAR Akustika v architekture 2;2023;PHD
+I1-AKAR Akustika v architekture 2;2023;PHD
+BV1-ALST Algebraické štruktury;2023;PHD
+B1-ACR Analyza casovych radov;2023;PHD
+I1-ANKO Analyza konštrukcii;2024;BCS
+IV1-AKG Analyza kvality geoudajov;2024;BCS
+I1-AJ1 Anglicky jazyk;2024;BCS
+I1-AJ3_M Anglicky jazyk;2024;BCS
+I1-AJ2 Anglicky jazyk;2024;BCS
+I1-AJ_1 Anglicky jazyk 1;2024;PHD
+I1-AITSTP Aplikacia informacnych technologii v STP;2024;PHD
+IV1-AITKN Aplikacie informacnych technologii;2024;PHD
+I1-ABF Aplikovana blizka fotogrametria;2024;PHD
+I1-AM_C Applied Mathematics;2024;PHD

@@ -101,10 +101,8 @@
     <QtMoc Include="AIS_MainWindow.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\..\..\..\..\Desktop\predmety_1.csv" />
-    <None Include="..\..\..\..\..\..\..\Desktop\predmety_2.csv" />
-  </ItemGroup>
-  <ItemGroup>
+    <Text Include="predmety_1.txt" />
+    <Text Include="predmety_2.txt" />
     <Text Include="Users.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

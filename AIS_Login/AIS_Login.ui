@@ -112,7 +112,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="lineEdit"/>
+        <widget class="QLineEdit" name="Line_Password"/>
        </item>
        <item>
         <spacer name="horizontalSpacer_4">

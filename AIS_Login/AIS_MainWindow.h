@@ -5,15 +5,15 @@
 #include <QFile>
 
 
-
 class Subject {
 	private:
 		QString Name;
-		int Study_Year;
+		QString Study_Year;
+		QString Type;
 	public:
-		Subject(QString name, int study_year) { Name = name; Study_Year = study_year; };
+		Subject(QString name, QString study_year, QString type) { Name = name; Study_Year = study_year; Type = type; };
 		QString Get_Name() { return Name; };
-		int Get_Study_Year() { return Study_Year; };
+		QString Get_Study_Year() { return Study_Year; };
 		
 };
 
@@ -22,7 +22,7 @@ class Enrolled_Subject : public Subject {
 		QString Mark;
 		int Attempts;
 	public:
-		Enrolled_Subject(QString name, int study_year, QString mark, int attempts) : Subject(name, study_year) { Mark = mark; Attempts = attempts; };
+		Enrolled_Subject(QString name, QString study_year, QString type, QString mark, int attempts) : Subject(name, study_year, type) { Mark = mark; Attempts = attempts; };
 		QString Get_Mark() { return Mark; };
 		int Get_Attempts() { return Attempts; };
 };
@@ -50,7 +50,7 @@ class Student : public User {
 		Student(QString login, QString password, QString year) : User(login, password), Year(year) {
 			Personal_Info = QMap<QString, QString>{ {"name", ""},{"Age", "0"}, {"surname", ""}};};
 		QVector<Enrolled_Subject> Get_Enrolled_Subjects() { return Enrolled_Subjects; };
-		void Enroll_Subject(Subject subject) { Get_Enrolled_Subjects().push_back(Enrolled_Subject(subject.Get_Name(), subject.Get_Study_Year(), "0", 0)); };
+		//void Enroll_Subject(Subject subject) { Get_Enrolled_Subjects().push_back(Enrolled_Subject(subject.Get_Name(), subject.Get_Study_Year(), "0", 0)); };
 		QString Get_Name() override { return (Personal_Info)["Name"]; };
 		QString Get_Surname() { return (Personal_Info)["Surname"]; };
 		void Set_Personal_Info(QString name, QString surname, QString age) { (Personal_Info)["Name"] = name; (Personal_Info)["Surname"] = surname; (Personal_Info)["Age"] = age; };
@@ -61,7 +61,7 @@ class Phd_Student : public Student {
 		QVector<Subject> Teaching_Subjects;
 	public:
 		Phd_Student(QString login, QString password, QString year) : Student(login, password, year) {};
-		void Modify_Marks(Student student, Subject subject, QString Mark) {}
+		void Modify_Marks(Student student, Subject subject, QString Mark) {};
 
 };
 
@@ -97,11 +97,15 @@ class AIS_MainWindow : public QMainWindow{
 		QVector<QSharedPointer<User>> Users;
 		QVector<Subject> Subjects;
 		QMap<Subject, QVector<Student>> Enrolled_Students;
+
 	public:
 		AIS_MainWindow(QWidget *parent = nullptr);
 		~AIS_MainWindow();
 		void Load_Users();
+		void Load_Subjects();
 		QVector<QSharedPointer<User>> Get_Users() { return Users; };
-		User Get_Indexed_User(int index) { return *Users[index]; };
+		QVector<Subject> Get_Subjects() { return Subjects; };
+		User Get_User(QString login);
 		void Print_Users();
+		void Print_Subjects();
 };
