@@ -13,6 +13,7 @@ class Subject {
 		Subject(QString name, int study_year) { Name = name; Study_Year = study_year; };
 		QString Get_Name() { return Name; };
 		int Get_Study_Year() { return Study_Year; };
+		
 };
 
 class Enrolled_Subject : public Subject {
@@ -32,19 +33,20 @@ class User {
 
 	public:
 		User(QString login, QString password) { Login = login; Password = password; };
-		void Get_Info();
+		virtual QString Get_Name() { return ""; };
 };
 
 class Student : public User {
 	private:
 		QMap<QString, QString> Personal_Info;
 		QVector<Enrolled_Subject> Enrolled_Subjects;
-		int Year;
+		QString Year;
 
 	public:
-		Student(QString login, QString password, QMap<QString, QString> personal_info, int year) : User(login, password) { Personal_Info = personal_info; Year = year; };
+		Student(QString login, QString password, QMap<QString, QString> personal_info, QString year): User(login, password), Personal_Info(personal_info), Year(year) {};
 		QVector<Enrolled_Subject> Get_Enrolled_Subjects() { return Enrolled_Subjects; };
 		void Enroll_Subject(Subject subject) { Get_Enrolled_Subjects().push_back(Enrolled_Subject(subject.Get_Name(), subject.Get_Study_Year(), "0", 0)); };
+		QString Get_Name() override { return Personal_Info["Name"]; };
 };
 
 class Phd_Student : public Student {
@@ -81,12 +83,12 @@ class AIS_MainWindow : public QMainWindow{
 
 	private:
 		Ui::AIS_MainWindowClass ui;
-		QVector<User> Users;
+		QVector<User*> Users;
 		QVector<Subject> Subjects;
 		QMap<Subject, QVector<Student>> Enrolled_Students;
 	public:
 		AIS_MainWindow(QWidget *parent = nullptr);
 		~AIS_MainWindow();
 		void Load_Users();
-		QVector<User> Get_Users() { return Users; };
+		QVector<User*> Get_Users() { return Users; };
 };
