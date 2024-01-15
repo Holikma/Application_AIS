@@ -13,8 +13,7 @@ class Subject {
 	public:
 		Subject(QString name, QString study_year, QString type) { Name = name; Study_Year = study_year; Type = type; };
 		QString Get_Name() { return Name; };
-		QString Get_Study_Year() { return Study_Year; };
-		
+		QString Get_Study_Year() { return Study_Year; };	
 };
 
 class Enrolled_Subject : public Subject {
@@ -27,40 +26,45 @@ class Enrolled_Subject : public Subject {
 		int Get_Attempts() { return Attempts; };
 };
 
-class User {
+class Person {
+	private:
+		QString Name;
+		QString Surname;
+		QString Age;
+	public:
+		Person() {};
+		Person(QString name, QString surname, QString age) { Name = name; Surname = surname; Age = age; };
+		QString Get_Name() { return Name; };
+		QString Get_Surname() { return Surname; };
+		QString Get_Age() { return Age; };
+};
+
+class User: public Person{
 	private:
 		QString Login;
 		QString Password;
-
 	public:
-		User(QString login, QString password) { Login = login; Password = password; };
-		virtual QString Get_Name() { return ""; };
-		virtual QString Get_Surname() { return ""; };
+
+		User(QString login, QString password, QString name, QString surname, QString age) : Person(name, surname, age) { Login = login; Password = password; };
 		QString Get_Login() { return Login; };
 		QString Get_Password() { return Password; };
 };
 
 class Student : public User {
 	private:
-		QMap<QString, QString> Personal_Info;
 		QVector<Enrolled_Subject> Enrolled_Subjects;
 		QString Year;
-
 	public:
-		Student(QString login, QString password, QString year) : User(login, password), Year(year) {
-			Personal_Info = QMap<QString, QString>{ {"name", ""},{"Age", "0"}, {"surname", ""}};};
+		Student(QString login, QString password, QString name, QString surname, QString age, QString year) : User(login, password, name, surname, age), Year(year) { Enrolled_Subjects = QVector<Enrolled_Subject>(); };
 		QVector<Enrolled_Subject> Get_Enrolled_Subjects() { return Enrolled_Subjects; };
-		//void Enroll_Subject(Subject subject) { Get_Enrolled_Subjects().push_back(Enrolled_Subject(subject.Get_Name(), subject.Get_Study_Year(), "0", 0)); };
-		QString Get_Name() override { return (Personal_Info)["Name"]; };
-		QString Get_Surname() { return (Personal_Info)["Surname"]; };
-		void Set_Personal_Info(QString name, QString surname, QString age) { (Personal_Info)["Name"] = name; (Personal_Info)["Surname"] = surname; (Personal_Info)["Age"] = age; };
+		//void Enroll_Subject(Subject subject);
 };
 
 class Phd_Student : public Student {
 	private:
 		QVector<Subject> Teaching_Subjects;
 	public:
-		Phd_Student(QString login, QString password, QString year) : Student(login, password, year) {};
+		Phd_Student(QString login, QString password, QString name, QString surname, QString age, QString year, QVector<Subject> sub) : Student(login, password, name, surname, age, year) { Teaching_Subjects = sub; };
 		void Modify_Marks(Student student, Subject subject, QString Mark) {};
 
 };
@@ -69,7 +73,7 @@ class Employee : public User {
 	private:
 		QString Position;
 	public:
-		Employee(QString login, QString password, QString position) : User(login, password), Position(position) {};
+		Employee(QString login, QString password, QString position) : User(login, password, "", "", ""), Position(position) {};
 		QString Get_Position() { return Position; };
 };
 
@@ -78,7 +82,7 @@ class Teacher : public Employee {
 		QVector<Subject> Teaching_Subjects;
 	public:
 		Teacher(QString login, QString password, QString position) : Employee(login, password, position) {};
-		void Modify_Marks(Student student, Subject subject, QString Mark);
+		//void Modify_Marks(Student student, Subject subject, QString Mark);
 };
 
 class Administrator : public Employee {
@@ -86,8 +90,8 @@ class Administrator : public Employee {
 		QVector<User> Users;
 	public:
 		Administrator(QString login, QString password, QString position) : Employee(login, password, position) {};
-		void Modify_User(User user);
-		void Update_Subjects();
+		//void Modify_User(User user);
+		//void Update_Subjects();
 };
 class AIS_MainWindow : public QMainWindow{
 	Q_OBJECT
