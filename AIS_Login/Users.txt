@@ -1,4 +1,0 @@
-1,Student1,1234,John,Doe,20, 1
-2,PhdStudent1,5678,Alice,Smith,25, 2
-3,Teacher1,abcd,User
-4,Admin1,0000,Admin

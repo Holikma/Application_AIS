@@ -73,7 +73,7 @@ class Employee : public User {
 	private:
 		QString Position;
 	public:
-		Employee(QString login, QString password, QString position) : User(login, password, "", "", ""), Position(position) {};
+		Employee(QString login, QString password, QString name, QString surname, QString age, QString position) : User(login, password, name, surname, age), Position(position) {};
 		QString Get_Position() { return Position; };
 };
 
@@ -81,15 +81,13 @@ class Teacher : public Employee {
 	private:
 		QVector<Subject> Teaching_Subjects;
 	public:
-		Teacher(QString login, QString password, QString position) : Employee(login, password, position) {};
+		Teacher(QString login, QString password, QString name, QString surname, QString age, QString position, QVector<Subject> sub) : Employee(login, password, name, surname, age, position) { Teaching_Subjects = sub; };
 		//void Modify_Marks(Student student, Subject subject, QString Mark);
 };
 
 class Administrator : public Employee {
-	private:
-		QVector<User> Users;
 	public:
-		Administrator(QString login, QString password, QString position) : Employee(login, password, position) {};
+		Administrator(QString login, QString password, QString name, QString surname, QString age, QString position) : Employee(login, password, name, surname, age, position) {};
 		//void Modify_User(User user);
 		//void Update_Subjects();
 };

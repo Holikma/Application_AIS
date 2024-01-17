@@ -17,10 +17,8 @@ void AIS_MainWindow::Load_Users() {
 	while (!in.atEnd()) {
 		QString line = in.readLine();
 		QStringList fields = line.split(',');
-		User *user = new User(fields[0], fields[1], fields[2], fields[3], fields[4], fields[5]);
-		Users.append(user);
-		file.close();
 	}
+	file.close();
 }
 
 void AIS_MainWindow::Load_Subjects(){
