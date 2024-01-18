@@ -1,6 +1,33 @@
 #include "AIS_MainWindow.h"
 
-AIS_MainWindow::AIS_MainWindow(QWidget *parent) : QMainWindow(parent){
+
+
+User::User(QString login, QString password, QString type) {
+	Login = login;
+	Password = password;
+	Type = type;
+}
+
+Person::Person(QString name, QString surname, QString age) {
+	Name = name;
+	Surname = surname;
+	Age = age;
+}
+
+Employee::Employee(QString login, QString password, QString type, QString name, QString surname, QString age, QString position, QVector<Subject> subject ) : User(login, password, type), Person(name, surname, age) {
+	Position = position;
+    Teaching_Subjects = subject;
+}
+
+Student::Student(QString login, QString password, QString type, QString name, QString surname, QString age, QString year, QVector<Enrolled_Subject> sub) : User(login, password, type), Person(name, surname, age) {
+	Year = year;
+    Enrolled_Subjects = sub;
+}
+
+Phd_Student::Phd_Student(QString login, QString password, QString type, QString name, QString surname, QString age, QString year, QVector<Subject> teaching_subjects, QVector<Enrolled_Subject> enrolled_subjects, QString position)
+    : Student(login, password, type, name, surname, age, year, enrolled_subjects), Employee(login, password, type, name, surname, age, position, teaching_subjects) {};
+
+AIS_MainWindow::AIS_MainWindow(QWidget* parent) : QMainWindow(parent) {
 	ui.setupUi(this);
 }
 
@@ -8,17 +35,16 @@ AIS_MainWindow::~AIS_MainWindow()
 {}
 
 void AIS_MainWindow::Load_Users() {
-	QFile file("Users.txt");
-	if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-		return;
+    QFile file("Users.txt");
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        return;
 
-
-	QTextStream in(&file);
+    QTextStream in(&file);
 	while (!in.atEnd()) {
 		QString line = in.readLine();
 		QStringList fields = line.split(',');
 	}
-	file.close();
+    file.close();
 }
 
 void AIS_MainWindow::Load_Subjects(){
@@ -28,30 +54,9 @@ void AIS_MainWindow::Load_Subjects(){
 	QTextStream in(&file);
 	while (!in.atEnd()) {
 		QString line = in.readLine();
-		QStringList fields = line.split(';');
+		QStringList fields = line.split(',');
 		Subject subject = Subject(fields[0], fields[1], fields[2]);
 		Subjects.append(subject);
 	}
-	Print_Subjects();
 	file.close();
-}
-
-void AIS_MainWindow::Print_Users() {
-	for (int i = 0; i < Get_Users().size(); i++) {
-		qDebug() << Get_Users()[i]->Get_Name() << Get_Users()[i]->Get_Surname();
-	}
-}
-
-void AIS_MainWindow::Print_Subjects() {
-	for (int i = 0; i < Get_Subjects().size(); i++) {
-		qDebug() << Get_Subjects()[i].Get_Name();
-	}
-}
-
-User AIS_MainWindow::Get_User(QString login) {
-	for (int i = 0; i < Get_Users().size(); i++) {
-		if (Get_Users()[i]->Get_Name() == login) {
-			return *Get_Users()[i];
-		}
-	}
 }

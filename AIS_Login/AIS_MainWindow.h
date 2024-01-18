@@ -12,8 +12,6 @@ class Subject {
 		QString Type;
 	public:
 		Subject(QString name, QString study_year, QString type) { Name = name; Study_Year = study_year; Type = type; };
-		QString Get_Name() { return Name; };
-		QString Get_Study_Year() { return Study_Year; };	
 };
 
 class Enrolled_Subject : public Subject {
@@ -22,8 +20,16 @@ class Enrolled_Subject : public Subject {
 		int Attempts;
 	public:
 		Enrolled_Subject(QString name, QString study_year, QString type, QString mark, int attempts) : Subject(name, study_year, type) { Mark = mark; Attempts = attempts; };
-		QString Get_Mark() { return Mark; };
-		int Get_Attempts() { return Attempts; };
+};
+
+
+class User {
+	private:
+		QString Login;
+		QString Password;
+		QString Type;
+	public:
+		User(QString name, QString surname, QString age);
 };
 
 class Person {
@@ -33,64 +39,30 @@ class Person {
 		QString Age;
 	public:
 		Person() {};
-		Person(QString name, QString surname, QString age) { Name = name; Surname = surname; Age = age; };
-		QString Get_Name() { return Name; };
-		QString Get_Surname() { return Surname; };
-		QString Get_Age() { return Age; };
+		Person(QString name, QString surname, QString age);
 };
 
-class User: public Person{
-	private:
-		QString Login;
-		QString Password;
-	public:
-
-		User(QString login, QString password, QString name, QString surname, QString age) : Person(name, surname, age) { Login = login; Password = password; };
-		QString Get_Login() { return Login; };
-		QString Get_Password() { return Password; };
-};
-
-class Student : public User {
-	private:
-		QVector<Enrolled_Subject> Enrolled_Subjects;
-		QString Year;
-	public:
-		Student(QString login, QString password, QString name, QString surname, QString age, QString year) : User(login, password, name, surname, age), Year(year) { Enrolled_Subjects = QVector<Enrolled_Subject>(); };
-		QVector<Enrolled_Subject> Get_Enrolled_Subjects() { return Enrolled_Subjects; };
-		//void Enroll_Subject(Subject subject);
-};
-
-class Phd_Student : public Student {
-	private:
-		QVector<Subject> Teaching_Subjects;
-	public:
-		Phd_Student(QString login, QString password, QString name, QString surname, QString age, QString year, QVector<Subject> sub) : Student(login, password, name, surname, age, year) { Teaching_Subjects = sub; };
-		void Modify_Marks(Student student, Subject subject, QString Mark) {};
-
-};
-
-class Employee : public User {
+class Employee : public User, public virtual Person {
 	private:
 		QString Position;
-	public:
-		Employee(QString login, QString password, QString name, QString surname, QString age, QString position) : User(login, password, name, surname, age), Position(position) {};
-		QString Get_Position() { return Position; };
-};
-
-class Teacher : public Employee {
-	private:
 		QVector<Subject> Teaching_Subjects;
 	public:
-		Teacher(QString login, QString password, QString name, QString surname, QString age, QString position, QVector<Subject> sub) : Employee(login, password, name, surname, age, position) { Teaching_Subjects = sub; };
-		//void Modify_Marks(Student student, Subject subject, QString Mark);
+		Employee(QString login, QString password, QString type, QString name, QString surname, QString age, QString position, QVector<Subject> teaching_subjects);
 };
 
-class Administrator : public Employee {
+class Student : public User, public virtual Person {
+	private:
+		QString Year;
+		QVector<Enrolled_Subject> Enrolled_Subjects;
 	public:
-		Administrator(QString login, QString password, QString name, QString surname, QString age, QString position) : Employee(login, password, name, surname, age, position) {};
-		//void Modify_User(User user);
-		//void Update_Subjects();
+		Student(QString login, QString password, QString type, QString name, QString surname, QString age, QString year, QVector<Enrolled_Subject> enrolled_subjects);
 };
+
+class Phd_Student : public Student, public Employee {
+	public:
+		Phd_Student(QString login, QString password, QString type, QString name, QString surname, QString age, QString year, QVector<Subject> teaching_subjects, QVector<Enrolled_Subject> enrolled_subjects, QString position);
+};
+
 class AIS_MainWindow : public QMainWindow{
 	Q_OBJECT
 
@@ -106,8 +78,5 @@ class AIS_MainWindow : public QMainWindow{
 		void Load_Users();
 		void Load_Subjects();
 		QVector<QSharedPointer<User>> Get_Users() { return Users; };
-		QVector<Subject> Get_Subjects() { return Subjects; };
-		User Get_User(QString login);
-		void Print_Users();
-		void Print_Subjects();
+
 };
