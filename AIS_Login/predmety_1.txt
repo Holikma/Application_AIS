@@ -8,4 +8,3 @@ Geography_1,2023,BCS
 Computer_Science_1,2023,PHD
 Art_1,2023,BCS
 Physical_Education_1,2023,PHD
-
