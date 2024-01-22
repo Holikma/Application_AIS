@@ -39,10 +39,10 @@ class User {
 		virtual QString Get_Name() { return ""; };
 		virtual QString Get_Surname() { return ""; };
 		virtual QString Get_Age() { return ""; };
-
-
-
-
+		virtual QString Get_Year() { return ""; };
+		virtual QVector<Enrolled_Subject*> Get_Enrolled_Subjects() { return QVector<Enrolled_Subject*>(); };
+		virtual QVector<Subject*> Get_Teaching_Subjects() { return QVector<Subject*>(); };
+		virtual void Enroll_Subject(Subject* subject) {};
 };
 
 class Person {
@@ -58,7 +58,7 @@ class Person {
 		QString Get_Age() { return Age; };
 };
 
-class Employee : public User, public virtual Person {
+class Employee : public User, public Person {
 	private:
 		QString Position;
 		QVector<Subject*> Teaching_Subjects;
@@ -68,25 +68,24 @@ class Employee : public User, public virtual Person {
 		QString Get_Name() override { return Person::Get_Name(); };
 		QString Get_Surname() override { return Person::Get_Surname(); };
 		QString Get_Age() override { return Person::Get_Age(); };
-
-
+		QVector<Subject*> Get_Teaching_Subjects() { return Teaching_Subjects; };
 };
 
-class Student : public User, public virtual Person {
+class Student : public User, public Person {
 	private:
 		QString Year;
 		QVector<Enrolled_Subject*> Enrolled_Subjects;
 	public:
 		Student(QString login, QString password, QString type, QString name, QString surname, QString age, QString year, QVector<Enrolled_Subject*> enrolled_subjects);
+		void Enroll_Subject(Subject* subject) override;
 		QString Get_Year() { return Year; };
-		QVector<Enrolled_Subject*> Get_Enrolled_Subjects() { return Enrolled_Subjects; };
-		void Enroll_Subject(Subject* subject);
+		QString Get_Age() override { return Person::Get_Age(); };
 		QString Get_Name() override { return Person::Get_Name(); };
 		QString Get_Surname() override { return Person::Get_Surname(); };
-		QString Get_Age() override { return Person::Get_Age(); };
+		QVector<Enrolled_Subject*> Get_Enrolled_Subjects() override { return Enrolled_Subjects; };
 };
 
-class Phd_Student : public Student, public Employee {
+class Phd_Student : public virtual Student, public virtual Employee {
 	public:
 		Phd_Student(QString login, QString password, QString type, QString name, QString surname, QString age, QString year, QVector<Subject*> teaching_subjects, QVector<Enrolled_Subject*> enrolled_subjects, QString position);
 };
@@ -98,7 +97,6 @@ class AIS_MainWindow : public QMainWindow{
 		Ui::AIS_MainWindowClass ui;
 		QVector<QSharedPointer<User>> Users;
 		QVector<Subject*> Subjects;
-		QMap<Subject, QVector<Student>> Enrolled_Students;
 
 	public:
 		AIS_MainWindow(QWidget *parent = nullptr);

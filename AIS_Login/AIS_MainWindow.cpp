@@ -29,6 +29,7 @@ void Student::Enroll_Subject(Subject* subject) {
 	Enrolled_Subjects.append(enrolled_subject);
 }
 
+
 Phd_Student::Phd_Student(QString login, QString password, QString type, QString name, QString surname, QString age, QString year, QVector<Subject*> teaching_subjects, QVector<Enrolled_Subject*> enrolled_subjects, QString position)
     : Student(login, password, type, name, surname, age, year, enrolled_subjects), Employee(login, password, type, name, surname, age, position, teaching_subjects) {};
 
@@ -57,9 +58,11 @@ void AIS_MainWindow::Load_Users() {
 			QStringList en_sub = fields[7].split(',');
 			for (int i = 0; i < en_sub.size(); i++) {
 				Subject* enrolled_sub = Get_Subject(en_sub[i]);
-				static_cast<Student*>(student)->Enroll_Subject(enrolled_sub);
+				student->Enroll_Subject(enrolled_sub);
 			};
-			
+		if (user->Get_Type() == "PhD_Student") {
+			User* student = new Phd_Student(fields[0], fields[1], fields[2], fields[3], fields[4], fields[5], fields[6], QVector<Subject*>(), QVector<Enrolled_Subject*>(), fields[7]);
+		}
 		}
 		delete user;
 	}
@@ -94,11 +97,16 @@ Subject* AIS_MainWindow::Get_Subject(QString name) {
 			return Subjects[i];
 		}
 	}
+	return nullptr;
 }
 
 void AIS_MainWindow::Print_Users() {
 	for (int i = 0; i < Users.size(); i++) {
 		QSharedPointer<User> user = Users[i];
-		qDebug() << user->Get_Name() << user->Get_Surname() << user->Get_Age() << user->Get_Login() << user->Get_Password() << user->Get_Type();
+		qDebug() << "Personal info: " << user->Get_Name() << user->Get_Surname() << user->Get_Age();
+		qDebug() << "Credentials: " << user->Get_Login() << user->Get_Password() << user->Get_Type();
+		qDebug() << "Enrolled Subjects: " << user->Get_Enrolled_Subjects();
+		qDebug() << "Teaching Subjects:" << user->Get_Teaching_Subjects();
+		
 	}
 }
