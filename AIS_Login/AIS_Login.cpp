@@ -2,8 +2,7 @@
 
 AIS_Login::AIS_Login(QWidget *parent) : QMainWindow(parent){
     ui.setupUi(this);
-	mainWindow->Load_Subjects();
-	mainWindow->Load_Users();
+	Set_Environment();
 	//connect(ui.Button_Submit, SIGNAL(clicked()), this, SLOT(Check_Login()));
 }
 

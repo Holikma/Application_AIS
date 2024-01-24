@@ -27,11 +27,12 @@ class Enrolled_Subject : public Subject {
 
 
 class User {
-	private:
+	protected:
 		QString Login;
 		QString Password;
 		QString Type;
 	public:
+		User() {};
 		User(QString name, QString surname, QString age);
 		QString Get_Login() { return Login; };
 		QString Get_Password() { return Password; };
@@ -43,51 +44,51 @@ class User {
 		virtual QVector<Enrolled_Subject*> Get_Enrolled_Subjects() { return QVector<Enrolled_Subject*>(); };
 		virtual QVector<Subject*> Get_Teaching_Subjects() { return QVector<Subject*>(); };
 		virtual void Enroll_Subject(Subject* subject) {};
+		virtual void Teach_Subject(Subject* subject) {};
 };
 
-class Person {
-	private:
+class Person : public User{
+	protected:
 		QString Name;
 		QString Surname;
 		QString Age;
 	public:
 		Person() {};
-		Person(QString name, QString surname, QString age);
-		QString Get_Name() { return Name; };
-		QString Get_Surname() { return Surname; };
-		QString Get_Age() { return Age; };
+		Person(QString login, QString password, QString type, QString name, QString surname, QString age);
+		QString Get_Name() override { return Name; };
+		QString Get_Surname() override { return Surname; };
+		QString Get_Age() override { return Age; };
 };
 
-class Employee : public User, public Person {
-	private:
+class Employee : public Person {
+	protected:
 		QString Position;
 		QVector<Subject*> Teaching_Subjects;
 	public:
 		Employee(QString login, QString password, QString type, QString name, QString surname, QString age, QString position, QVector<Subject*> teaching_subjects);
 		QString Get_Position() { return Position; };
-		QString Get_Name() override { return Person::Get_Name(); };
-		QString Get_Surname() override { return Person::Get_Surname(); };
-		QString Get_Age() override { return Person::Get_Age(); };
 		QVector<Subject*> Get_Teaching_Subjects() { return Teaching_Subjects; };
+		void Teach_Subject(Subject* subject) override;
 };
 
-class Student : public User, public Person {
-	private:
+class Student : public Person {
+	protected:
 		QString Year;
 		QVector<Enrolled_Subject*> Enrolled_Subjects;
 	public:
 		Student(QString login, QString password, QString type, QString name, QString surname, QString age, QString year, QVector<Enrolled_Subject*> enrolled_subjects);
 		void Enroll_Subject(Subject* subject) override;
 		QString Get_Year() { return Year; };
-		QString Get_Age() override { return Person::Get_Age(); };
-		QString Get_Name() override { return Person::Get_Name(); };
-		QString Get_Surname() override { return Person::Get_Surname(); };
 		QVector<Enrolled_Subject*> Get_Enrolled_Subjects() override { return Enrolled_Subjects; };
 };
 
-class Phd_Student : public virtual Student, public virtual Employee {
+class Phd_Student : public Student {
+	private:
+		QVector<Subject*> Teaching_Subjects;
 	public:
-		Phd_Student(QString login, QString password, QString type, QString name, QString surname, QString age, QString year, QVector<Subject*> teaching_subjects, QVector<Enrolled_Subject*> enrolled_subjects, QString position);
+		void Teach_Subject(Subject* subject) override;
+		Phd_Student(QString login, QString password, QString type, QString name, QString surname, QString age, QString year, QVector<Subject*> teaching_subjects, QVector<Enrolled_Subject*> enrolled_subjects);
+		
 };
 
 class AIS_MainWindow : public QMainWindow{
