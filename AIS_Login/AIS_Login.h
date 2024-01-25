@@ -19,6 +19,7 @@ class AIS_Login : public QMainWindow{
         AIS_Login(QWidget *parent = nullptr);
         ~AIS_Login();
         void Set_Environment();
+        void Set_Users();
        
 
 };

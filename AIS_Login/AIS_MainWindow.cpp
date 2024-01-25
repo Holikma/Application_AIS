@@ -1,7 +1,5 @@
 #include "AIS_MainWindow.h"
 
-
-
 User::User(QString login, QString password, QString type) {
 	Login = login;
 	Password = password;
@@ -41,7 +39,6 @@ void Phd_Student::Teach_Subject(Subject* subject) {
 void Employee::Teach_Subject(Subject* subject) {
 	Teaching_Subjects.append(subject);
 }
-
 
 AIS_MainWindow::AIS_MainWindow(QWidget* parent) : QMainWindow(parent) {
 	ui.setupUi(this);
@@ -104,7 +101,6 @@ void AIS_MainWindow::Load_Users() {
 			};
 			QSharedPointer<User> userSharedPointer(admin);
 			Users.append(userSharedPointer);
-
 		}
 		else {
 			continue;
@@ -153,6 +149,14 @@ void AIS_MainWindow::Print_Users() {
 		qDebug() << "Credentials: " << user->Get_Login() << user->Get_Password() << user->Get_Type();
 		qDebug() << "Enrolled Subjects: " << user->Get_Enrolled_Subjects();
 		qDebug() << "Teaching Subjects:" << user->Get_Teaching_Subjects();
-
 	}
+}
+
+User* AIS_MainWindow::Get_User(QString login) {
+	for (int i = 0; i < Users.size(); i++) {
+		if (Users[i]->Get_Login() == login) {
+			return Users[i].data();
+		}
+	}
+	return nullptr;
 }

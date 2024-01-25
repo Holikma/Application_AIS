@@ -25,7 +25,6 @@ class Enrolled_Subject : public Subject {
 		Enrolled_Subject(QString name, QString study_year, QString type, QString mark, int attempts) : Subject(name, study_year, type) { Mark = mark; Attempts = attempts; };
 };
 
-
 class User {
 	protected:
 		QString Login;
@@ -87,8 +86,7 @@ class Phd_Student : public Student {
 		QVector<Subject*> Teaching_Subjects;
 	public:
 		void Teach_Subject(Subject* subject) override;
-		Phd_Student(QString login, QString password, QString type, QString name, QString surname, QString age, QString year, QVector<Subject*> teaching_subjects, QVector<Enrolled_Subject*> enrolled_subjects);
-		
+		Phd_Student(QString login, QString password, QString type, QString name, QString surname, QString age, QString year, QVector<Subject*> teaching_subjects, QVector<Enrolled_Subject*> enrolled_subjects);	
 };
 
 class AIS_MainWindow : public QMainWindow{
@@ -107,6 +105,7 @@ class AIS_MainWindow : public QMainWindow{
 		void Load_Subjects();
 		void Print_Subjects();
 		Subject* Get_Subject(QString name);
+		User* Get_User(QString login);
 		QVector<Subject*> Get_Subjects() { return Subjects; };
 		QVector<QSharedPointer<User>> Get_Users() { return Users; };
 
