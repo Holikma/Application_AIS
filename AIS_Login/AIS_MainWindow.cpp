@@ -28,7 +28,7 @@ Phd_Student::Phd_Student(QString login, QString password, QString type, QString 
 };
 
 void Student::Enroll_Subject(Subject* subject) {
-	Enrolled_Subject* enrolled_subject = new Enrolled_Subject(subject->Get_Name(), subject->Get_Study_Year(), subject->Get_Type(), QString("0"), 0);
+	Enrolled_Subject* enrolled_subject = new Enrolled_Subject(subject->Get_Name(), subject->Get_Study_Year(), subject->Get_Type(), subject->Get_Has_Teacher(), "-", 0);
 	Enrolled_Subjects.append(enrolled_subject);
 }
 
@@ -59,53 +59,60 @@ void AIS_MainWindow::Load_Users() {
 		User* user =  new User(fields[0], fields[1], fields[2]);
 		if (user->Get_Type() == "Student") {
 			User* student = new Student(fields[0], fields[1], fields[2], fields[3], fields[4], fields[5], fields[6], QVector<Enrolled_Subject*>());
-			QStringList en_sub = fields[7].split(',');
-			for (int i = 0; i < en_sub.size(); i++) {
-				Subject* enrolled_sub = Get_Subject(en_sub[i]);
-				student->Enroll_Subject(enrolled_sub);
-			};
+			if (fields.size() > 7) {
+				QStringList en_sub = fields[7].split(',');
+				for (int i = 0; i < en_sub.size(); i++) {
+					student->Enroll_Subject(Get_Subject(en_sub[i]));
+				}
+			}
 			QSharedPointer<User> userSharedPointer(student);
 			Users.append(userSharedPointer);
 		}
+
 		else if(user->Get_Type() == "PhD_Student") {
 			User* phd_student = new Phd_Student(fields[0], fields[1], fields[2], fields[3], fields[4], fields[5], fields[6], QVector<Subject*>(), QVector<Enrolled_Subject*>());
-			QStringList te_sub = fields[7].split(',');
-			for (int i = 0; i < te_sub.size(); i++) {
-				Subject* teaching_sub = Get_Subject(te_sub[i]);
-				phd_student->Teach_Subject(teaching_sub);
-			};
-			QStringList en_sub = fields[8].split(',');
-			for (int i = 0; i < en_sub.size(); i++) {
-				Subject* enrolled_sub = Get_Subject(en_sub[i]);
-				phd_student->Enroll_Subject(enrolled_sub);
-			};
+			if (fields.size() > 7) {
+				QStringList te_sub = fields[7].split(',');
+				for (int i = 0; i < te_sub.size(); i++) {
+					phd_student->Teach_Subject(Get_Subject(te_sub[i]));
+				}
+			}
+			if (fields.size() > 8) {
+				QStringList en_sub = fields[8].split(',');
+				for (int i = 0; i < en_sub.size(); i++) {
+					phd_student->Enroll_Subject(Get_Subject(en_sub[i]));
+				}
+			}
 			QSharedPointer<User> userSharedPointer(phd_student);
 			Users.append(userSharedPointer);
 		}
+
 		else if(user->Get_Type() == "Teacher") {
 			User* employee = new Employee(fields[0], fields[1], fields[2], fields[3], fields[4], fields[5], fields[6], QVector<Subject*>());
-			QStringList te_sub = fields[7].split(',');
-			for (int i = 0; i < te_sub.size(); i++) {
-				Subject* teaching_sub = Get_Subject(te_sub[i]);
-				employee->Teach_Subject(teaching_sub);
-			};
+			if (fields.size() > 7) {
+				QStringList te_sub = fields[7].split(',');
+				for (int i = 0; i < te_sub.size(); i++) {
+					employee->Teach_Subject(Get_Subject(te_sub[i]));
+				}
+			}
 			QSharedPointer<User> userSharedPointer(employee);
 			Users.append(userSharedPointer);
 		}
 		else if(user->Get_Type() == "Admin"){
 			User* admin = new Employee(fields[0], fields[1], fields[2], fields[3], fields[4], fields[5], fields[6], QVector<Subject*>());
-			QStringList te_sub = fields[7].split(',');
-			for (int i = 0; i < te_sub.size(); i++) {
-				Subject* teaching_sub = Get_Subject(te_sub[i]);
-				admin->Teach_Subject(teaching_sub);
-			};
+			if (fields.size() > 7) {
+				QStringList te_sub = fields[7].split(',');
+				for (int i = 0; i < te_sub.size(); i++) {
+					Subject* teaching_sub = Get_Subject(te_sub[i]);
+					admin->Teach_Subject(teaching_sub);
+				}
+			}
 			QSharedPointer<User> userSharedPointer(admin);
 			Users.append(userSharedPointer);
 		}
 		else {
 			continue;
 		}
-
 		delete user;
 	}
 	Print_Users();
@@ -121,7 +128,7 @@ void AIS_MainWindow::Load_Subjects(){
 	while (!in.atEnd()) {
 		QString line = in.readLine();
 		QStringList fields = line.split(',');
-		Subject *subject = new Subject(fields[0], fields[1], fields[2]);
+		Subject *subject = new Subject(fields[0], fields[1], fields[2], false);
 		Subjects.append(subject);
 	}
 	file.close();
@@ -159,4 +166,46 @@ User* AIS_MainWindow::Get_User(QString login) {
 		}
 	}
 	return nullptr;
+}
+
+void AIS_MainWindow::Set_Student_Ui(User* user) {
+	ui.TabWidget->setTabVisible(0, true);
+	ui.TabWidget->setTabVisible(1, true);
+	ui.TabWidget->setTabVisible(2, false);
+	ui.TabWidget->setTabVisible(3, false);
+	Table_Subjects_Available(user);
+}
+
+void AIS_MainWindow::Set_Teacher_Ui(User* user) {
+	ui.TabWidget->setTabVisible(0, false);
+	ui.TabWidget->setTabVisible(1, true);
+	ui.TabWidget->setTabVisible(2, true);
+	ui.TabWidget->setTabVisible(3, false);
+
+
+}
+
+void AIS_MainWindow::Set_Admin_Ui(User* user) {
+	ui.TabWidget->setTabVisible(0, false);
+	ui.TabWidget->setTabVisible(1, true);
+	ui.TabWidget->setTabVisible(2, true);
+	ui.TabWidget->setTabVisible(3, true);
+}
+
+void AIS_MainWindow::Set_PhD_Student_Ui(User* user) {
+	ui.TabWidget->setTabVisible(0, true);
+	ui.TabWidget->setTabVisible(1, true);
+	ui.TabWidget->setTabVisible(2, true);
+	ui.TabWidget->setTabVisible(3, false);
+}
+
+void AIS_MainWindow::Table_Subjects_Available(User* user) {
+	ui.Table_Subjects_Available->setRowCount(Subjects.size());
+	ui.Table_Subjects_Available->setColumnCount(3);
+	ui.Table_Subjects_Available->setHorizontalHeaderLabels(QStringList() << "Name" << "Study Year" << "Type");
+	for (int i = 0; i < Subjects.size(); i++) {
+		ui.Table_Subjects_Available->setItem(i, 0, new QTableWidgetItem(Subjects[i]->Get_Name()));
+		ui.Table_Subjects_Available->setItem(i, 1, new QTableWidgetItem(Subjects[i]->Get_Study_Year()));
+		ui.Table_Subjects_Available->setItem(i, 2, new QTableWidgetItem(Subjects[i]->Get_Type()));
+	}
 }
