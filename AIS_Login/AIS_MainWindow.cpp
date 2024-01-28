@@ -43,7 +43,8 @@ void Employee::Teach_Subject(Subject* subject) {
 AIS_MainWindow::AIS_MainWindow(QWidget* parent) : QMainWindow(parent) {
 	ui.setupUi(this);
 	connect(ui.Button_Generate_Report, SIGNAL(clicked()), this, SLOT(Generate_Report()));
-	connect(ui.Button_Enroll,SIGNAL(clicked()), this, SLOT(Enroll_Subject()));
+	connect(ui.Button_Enroll, SIGNAL(clicked()), this, SLOT(Enroll_Subject()));
+	connect(ui.Button_Teach, SIGNAL(clicked()), this, SLOT(Teach_Subject()));
 }
 
 AIS_MainWindow::~AIS_MainWindow()
@@ -65,6 +66,7 @@ void AIS_MainWindow::Load_Users() {
 				QStringList en_sub = fields[7].split(',');
 				for (int i = 0; i < en_sub.size(); i++) {
 					student->Enroll_Subject(Get_Subject(en_sub[i]));
+					Update_Database(Get_Subject(en_sub[i]), dynamic_cast<Student*>(student));
 				}
 			}
 			QSharedPointer<User> userSharedPointer(student);
@@ -83,6 +85,7 @@ void AIS_MainWindow::Load_Users() {
 				QStringList en_sub = fields[8].split(',');
 				for (int i = 0; i < en_sub.size(); i++) {
 					phd_student->Enroll_Subject(Get_Subject(en_sub[i]));
+					Update_Database(Get_Subject(en_sub[i]), dynamic_cast<Student*>(phd_student));
 				}
 			}
 			QSharedPointer<User> userSharedPointer(phd_student);
@@ -201,7 +204,7 @@ void AIS_MainWindow::Set_Teacher_Ui(User* user) {
 	ui.TabWidget->setTabVisible(3, false);
 	ui.Line_Current_User->setText(user->Get_Login());
 	ui.Line_Current_User->setEnabled(false);
-	Set_List_Subjects_to_Teach(Get_Subjects());
+	List_Subjects_to_Teach();
 }
 
 void AIS_MainWindow::Set_Admin_Ui(User* user) {
@@ -380,13 +383,85 @@ void AIS_MainWindow::Set_Personal_Info(User* user) {
 	ui.Line_Type->setEnabled(false);
 }
 
-void AIS_MainWindow::Set_List_Subjects_to_Teach() {
+void AIS_MainWindow::List_Subjects_to_Teach() {
+	ui.List_Subjects_to_Teach->setColumnCount(2);
+	ui.List_Subjects_to_Teach->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
 	for (int i = 0; i < Get_Subjects().size(); i++) {
-		if (Subjects[i]->Get_Teacher() == "") {
-			int newRow = ui.List_Subjects_to_Teach->rowCount();
-			ui.List_Subjects_to_Teach->insertRow(newRow);
-			ui.List_Subjects_to_Teach->setItem(newRow, 0, new QTableWidgetItem(Subjects[i]->Get_Name()));
-			ui.List_Subjects_to_Teach->setItem(newRow, 1, new QTableWidgetItem(Subjects[i]->Get_Teacher()));
+		if (Subjects[i]->Get_Teacher() != "") {
+			continue;
 		}
+		int newRow = ui.List_Subjects_to_Teach->rowCount();
+		ui.List_Subjects_to_Teach->insertRow(newRow);
+		ui.List_Subjects_to_Teach->setItem(newRow, 0, new QTableWidgetItem(Subjects[i]->Get_Name()));
+		ui.List_Subjects_to_Teach->setItem(newRow, 1, new QTableWidgetItem(Subjects[i]->Get_Teacher()));
+	}
+}
+
+void AIS_MainWindow::Teach_Subject() {
+	User* current_user = Get_User(ui.Line_Current_User->text());
+	QString subject_name = ui.List_Subjects_to_Teach->item(ui.List_Subjects_to_Teach->currentRow(), 0)->text();
+	Subject* subject = Get_Subject(subject_name);
+	current_user->Teach_Subject(subject);
+	List_Teaching_Subjects(current_user);
+}
+
+void AIS_MainWindow::List_Teaching_Subjects(User* user) {
+	ui.List_Teaching_Subjects->setRowCount(user->Get_Teaching_Subjects().size());
+	ui.List_Teaching_Subjects->setColumnCount(2);
+	ui.List_Teaching_Subjects->setEditTriggers(QAbstractItemView::NoEditTriggers);
+	ui.List_Teaching_Subjects->setSelectionBehavior(QAbstractItemView::SelectRows);
+	ui.List_Teaching_Subjects->setSelectionMode(QAbstractItemView::SingleSelection);
+	ui.List_Teaching_Subjects->setShowGrid(false);
+	ui.List_Teaching_Subjects->verticalHeader()->hide();
+	ui.List_Teaching_Subjects->setHorizontalHeaderLabels(QStringList() << "Name" << "Teacher");
+	for (int i = 0; i < user->Get_Teaching_Subjects().size(); i++) {
+		ui.List_Teaching_Subjects->setItem(i, 0, new QTableWidgetItem(user->Get_Teaching_Subjects()[i]->Get_Name()));
+		ui.List_Teaching_Subjects->setItem(i, 1, new QTableWidgetItem(user->Get_Teaching_Subjects()[i]->Get_Teacher()));
+	}
+}
+
+void AIS_MainWindow::List_Enrolled_Students() {
+	//List_enrolled_Students is QListWidget
+}
+
+void AIS_MainWindow::Load_Database() {
+	for (int i = 0; i < Get_Users().size(); i++) {
+		if (Users[i]->Get_Type() != "Student") {
+			continue;
+		}
+		Student* student = dynamic_cast<Student*>(Users[i].data());
+		QVector<Enrolled_Subject*> enrolledSubjects = student->Get_Enrolled_Subjects();
+		for (Subject* subject : enrolledSubjects) {
+			if (Database.contains(subject)) {
+				Database[subject].append(student);
+			}
+			else {
+				QVector<Student*> students;
+				students.append(student);
+				Database.insert(subject, students);
+			}
+		}
+	}
+}
+
+void AIS_MainWindow::Print_Database() {
+	for (Subject* subject : Database.keys()) {
+		qDebug() << subject->Get_Name();
+		for (Student* student : Database[subject]) {
+			qDebug() << student->Get_Name() << student->Get_Surname();
+		}
+		qDebug() << "----------------------------------";
+	}
+}
+
+void AIS_MainWindow::Update_Database(Subject* subject,Student* student) {
+	if (Database.contains(subject)) {
+		Database[subject].append(student);
+	}
+	else {
+		QVector<Student*> students;
+		students.append(student);
+		Database.insert(subject,students);
 	}
 }

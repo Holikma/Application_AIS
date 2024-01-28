@@ -108,6 +108,7 @@ class AIS_MainWindow : public QMainWindow{
 	private slots:
 		void Generate_Report();
 		void Enroll_Subject();
+		void Teach_Subject();
 
 	public:
 		void closeEvent(QCloseEvent* event) override;
@@ -115,21 +116,26 @@ class AIS_MainWindow : public QMainWindow{
 		~AIS_MainWindow();
 		Ui::AIS_MainWindowClass Get_UI() { return ui; };
 		void Load_Users();
-		void Print_Users();
 		void Load_Subjects();
+		void Load_Database();
+		void Print_Users();
 		void Print_Subjects();
-		Subject* Get_Subject(QString name);
+		void Print_Database();
 		User* Get_User(QString login);
+		Subject* Get_Subject(QString name);
 		QVector<Subject*> Get_Subjects() { return Subjects; };
 		QVector<QSharedPointer<User>> Get_Users() { return Users; };
 		void Set_Student_Ui(User* user);
 		void Set_Teacher_Ui(User* user);
 		void Set_PhD_Student_Ui(User* user);
 		void Set_Admin_Ui(User* user);
+		void Set_Personal_Info(User* user);
 		void List_Subjects(User* user);
 		void List_Enrolled_Subjects(User* user);
+		void List_Subjects_to_Teach();
+		void List_Teaching_Subjects(User* user);
+		void List_Enrolled_Students();
 		void Save_Users_to_File();
-		void Set_Personal_Info(User* user);
-		void Set_List_Subjects_to_Teach();
+		void Update_Database(Subject* subject, Student* Student);
 };
 //name;password;role;first_name;last_name;age;year/role;en_subjects;te_subjects

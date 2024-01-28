@@ -269,7 +269,7 @@
             </property>
             <layout class="QGridLayout" name="gridLayout_3">
              <item row="7" column="0">
-              <widget class="QLabel" name="label_6">
+              <widget class="QLabel" name="Label_Age">
                <property name="text">
                 <string>Age:</string>
                </property>
@@ -318,7 +318,7 @@
               </widget>
              </item>
              <item row="2" column="0">
-              <widget class="QLabel" name="label_8">
+              <widget class="QLabel" name="Label_Password">
                <property name="text">
                 <string>Password:</string>
                </property>
@@ -341,7 +341,7 @@
               </spacer>
              </item>
              <item row="6" column="0">
-              <widget class="QLabel" name="label_5">
+              <widget class="QLabel" name="Label_Surname">
                <property name="text">
                 <string>Surname:</string>
                </property>
@@ -390,7 +390,7 @@
               <widget class="QLineEdit" name="Line_Password_Info"/>
              </item>
              <item row="8" column="0">
-              <widget class="QLabel" name="label_9">
+              <widget class="QLabel" name="Label_Priviliges">
                <property name="text">
                 <string>Priviliges:</string>
                </property>
@@ -426,7 +426,7 @@
               </spacer>
              </item>
              <item row="9" column="0">
-              <widget class="QLabel" name="label_10">
+              <widget class="QLabel" name="Education">
                <property name="text">
                 <string>Education:</string>
                </property>
@@ -446,7 +446,7 @@
               </spacer>
              </item>
              <item row="4" column="0">
-              <widget class="QLabel" name="label_3">
+              <widget class="QLabel" name="Label_Name">
                <property name="text">
                 <string>Name:</string>
                </property>
@@ -456,14 +456,14 @@
               <widget class="QLineEdit" name="Line_Surname"/>
              </item>
              <item row="0" column="0">
-              <widget class="QLabel" name="label_7">
+              <widget class="QLabel" name="Label_Login">
                <property name="text">
                 <string>Login:</string>
                </property>
               </widget>
              </item>
              <item row="3" column="0">
-              <widget class="QLabel" name="label_16">
+              <widget class="QLabel" name="Label_Type">
                <property name="text">
                 <string>Type:</string>
                </property>
@@ -471,6 +471,19 @@
              </item>
              <item row="3" column="1">
               <widget class="QLineEdit" name="Line_Type"/>
+             </item>
+             <item row="3" column="2">
+              <spacer name="horizontalSpacer_13">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
              </item>
             </layout>
            </widget>
@@ -530,8 +543,8 @@
              <string>List of Teaching subjects</string>
             </property>
             <layout class="QFormLayout" name="formLayout_4">
-             <item row="0" column="0">
-              <widget class="QTableWidget" name="tableWidget_5"/>
+             <item row="0" column="0" colspan="2">
+              <widget class="QTableWidget" name="List_Teaching_Subjects"/>
              </item>
             </layout>
            </widget>
@@ -541,9 +554,16 @@
             <property name="title">
              <string>Select Subjects to Teach</string>
             </property>
-            <layout class="QFormLayout" name="formLayout_6">
-             <item row="0" column="0">
+            <layout class="QHBoxLayout" name="horizontalLayout">
+             <item>
               <widget class="QTableWidget" name="List_Subjects_to_Teach"/>
+             </item>
+             <item>
+              <widget class="QPushButton" name="Button_Teach">
+               <property name="text">
+                <string>Teach</string>
+               </property>
+              </widget>
              </item>
             </layout>
            </widget>
@@ -555,7 +575,7 @@
             </property>
             <layout class="QFormLayout" name="formLayout_5">
              <item row="0" column="0">
-              <widget class="QTableWidget" name="tableWidget_6"/>
+              <widget class="QListWidget" name="List_Enrolled_Students"/>
              </item>
             </layout>
            </widget>

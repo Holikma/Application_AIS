@@ -1,4 +1,4 @@
-user1;pass1;Student;Alice;Johnson;20;2
+user1;pass1;Student;Alice;Johnson;20;2;Mathematics_1
 user4;pass4;Student;David;Brown;19;1
 user7;pass7;Student;Grace;Foster;21;3
 user10;pass10;Student;Jack;Ingram;22;5
