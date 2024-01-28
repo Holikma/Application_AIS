@@ -28,7 +28,7 @@ Phd_Student::Phd_Student(QString login, QString password, QString type, QString 
 };
 
 void Student::Enroll_Subject(Subject* subject) {
-	Enrolled_Subject* enrolled_subject = new Enrolled_Subject(subject->Get_Name(), subject->Get_Study_Year(), subject->Get_Type(), subject->Get_Has_Teacher(), "-", 0);
+	Enrolled_Subject* enrolled_subject = new Enrolled_Subject(subject->Get_Name(), subject->Get_Study_Year(), subject->Get_Type(), subject->Get_Teacher(), "-", 0);
 	Enrolled_Subjects.append(enrolled_subject);
 }
 
@@ -43,6 +43,7 @@ void Employee::Teach_Subject(Subject* subject) {
 AIS_MainWindow::AIS_MainWindow(QWidget* parent) : QMainWindow(parent) {
 	ui.setupUi(this);
 	connect(ui.Button_Generate_Report, SIGNAL(clicked()), this, SLOT(Generate_Report()));
+	connect(ui.Button_Enroll,SIGNAL(clicked()), this, SLOT(Enroll_Subject()));
 }
 
 AIS_MainWindow::~AIS_MainWindow()
@@ -128,7 +129,10 @@ void AIS_MainWindow::Load_Subjects(){
 	while (!in.atEnd()) {
 		QString line = in.readLine();
 		QStringList fields = line.split(',');
-		Subject *subject = new Subject(fields[0], fields[1], fields[2], false);
+		Subject* subject = new Subject(fields[0], fields[1], fields[2], "");
+		if (fields.size() > 3) {
+			subject->Set_Teacher(fields[3]);
+		}
 		Subjects.append(subject);
 	}
 	file.close();
@@ -183,9 +187,10 @@ void AIS_MainWindow::Set_Student_Ui(User* user) {
 	ui.TabWidget->setTabVisible(1, true);
 	ui.TabWidget->setTabVisible(2, false);
 	ui.TabWidget->setTabVisible(3, false);
-	Table_Subjects_Available(user);
-	ui.Line_Current_User->setText(user->Get_Name() + " " + user->Get_Surname());
+	List_Subjects(user);
+	ui.Line_Current_User->setText(user->Get_Login());
 	ui.Line_Current_User->setEnabled(false);
+	Set_Personal_Info(user);
 
 }
 
@@ -194,10 +199,9 @@ void AIS_MainWindow::Set_Teacher_Ui(User* user) {
 	ui.TabWidget->setTabVisible(1, true);
 	ui.TabWidget->setTabVisible(2, true);
 	ui.TabWidget->setTabVisible(3, false);
-	ui.Line_Current_User->setText(user->Get_Name() + " " + user->Get_Surname());
+	ui.Line_Current_User->setText(user->Get_Login());
 	ui.Line_Current_User->setEnabled(false);
-
-
+	Set_List_Subjects_to_Teach(Get_Subjects());
 }
 
 void AIS_MainWindow::Set_Admin_Ui(User* user) {
@@ -205,7 +209,7 @@ void AIS_MainWindow::Set_Admin_Ui(User* user) {
 	ui.TabWidget->setTabVisible(1, true);
 	ui.TabWidget->setTabVisible(2, true);
 	ui.TabWidget->setTabVisible(3, true);
-	ui.Line_Current_User->setText(user->Get_Name() + " " + user->Get_Surname());
+	ui.Line_Current_User->setText(user->Get_Login());
 	ui.Line_Current_User->setEnabled(false);
 }
 
@@ -214,18 +218,24 @@ void AIS_MainWindow::Set_PhD_Student_Ui(User* user) {
 	ui.TabWidget->setTabVisible(1, true);
 	ui.TabWidget->setTabVisible(2, true);
 	ui.TabWidget->setTabVisible(3, false);
-	ui.Line_Current_User->setText(user->Get_Name() + " " + user->Get_Surname());
+	ui.Line_Current_User->setText(user->Get_Login());
 	ui.Line_Current_User->setEnabled(false);
 }
 
-void AIS_MainWindow::Table_Subjects_Available(User* user) {
-	ui.Table_Subjects_Available->setRowCount(Subjects.size());
-	ui.Table_Subjects_Available->setColumnCount(3);
-	ui.Table_Subjects_Available->setHorizontalHeaderLabels(QStringList() << "Name" << "Study Year" << "Type");
+void AIS_MainWindow::List_Subjects(User* user) {
+	ui.List_Subjects->setRowCount(Subjects.size());
+	ui.List_Subjects->setColumnCount(2);
+	ui.List_Subjects->setEditTriggers(QAbstractItemView::NoEditTriggers);
+	ui.List_Subjects->setSelectionBehavior(QAbstractItemView::SelectRows);
+	ui.List_Subjects->setSelectionMode(QAbstractItemView::SingleSelection);
+	ui.List_Subjects->setShowGrid(false);
+	ui.List_Subjects->verticalHeader()->hide();
+	ui.List_Subjects->setHorizontalHeaderLabels(QStringList() << "Name" << "Teacher");
+	ui.List_Subjects->setColumnWidth(0, 300);
+	ui.List_Subjects->setColumnWidth(1, 150);
 	for (int i = 0; i < Subjects.size(); i++) {
-		ui.Table_Subjects_Available->setItem(i, 0, new QTableWidgetItem(Subjects[i]->Get_Name()));
-		ui.Table_Subjects_Available->setItem(i, 1, new QTableWidgetItem(Subjects[i]->Get_Study_Year()));
-		ui.Table_Subjects_Available->setItem(i, 2, new QTableWidgetItem(Subjects[i]->Get_Type()));
+		ui.List_Subjects->setItem(i, 0, new QTableWidgetItem(Subjects[i]->Get_Name()));
+		ui.List_Subjects->setItem(i, 1, new QTableWidgetItem(Subjects[i]->Get_Teacher()));
 	}
 }
 
@@ -321,6 +331,62 @@ void AIS_MainWindow::Save_Users_to_File() {
 		}
 		if (i != Users.size() - 1) {
 			out << "\n";
+		}
+	}
+}
+
+void AIS_MainWindow::Enroll_Subject() {
+	User* current_user = Get_User(ui.Line_Current_User->text());
+	QString subject_name = ui.List_Subjects->item(ui.List_Subjects->currentRow(), 0)->text();
+	Subject* subject = Get_Subject(subject_name);
+	current_user->Enroll_Subject(subject);
+	List_Enrolled_Subjects(current_user);
+
+}
+
+void AIS_MainWindow::List_Enrolled_Subjects(User* user) {
+	ui.List_Enrolled_Subjects->setRowCount(user->Get_Enrolled_Subjects().size());
+	ui.List_Enrolled_Subjects->setColumnCount(3);
+	ui.List_Enrolled_Subjects->setEditTriggers(QAbstractItemView::NoEditTriggers);
+	ui.List_Enrolled_Subjects->setSelectionBehavior(QAbstractItemView::SelectRows);
+	ui.List_Enrolled_Subjects->setSelectionMode(QAbstractItemView::SingleSelection);
+	ui.List_Enrolled_Subjects->setShowGrid(false);
+	ui.List_Enrolled_Subjects->verticalHeader()->hide();
+	ui.List_Enrolled_Subjects->setHorizontalHeaderLabels(QStringList() << "Name" << "Study Year" << "Type");
+	for (int i = 0; i < user->Get_Enrolled_Subjects().size(); i++) {
+		ui.List_Enrolled_Subjects->setItem(i, 0, new QTableWidgetItem(user->Get_Enrolled_Subjects()[i]->Get_Name()));
+		ui.List_Enrolled_Subjects->setItem(i, 1, new QTableWidgetItem(user->Get_Enrolled_Subjects()[i]->Get_Study_Year()));
+		ui.List_Enrolled_Subjects->setItem(i, 2, new QTableWidgetItem(user->Get_Enrolled_Subjects()[i]->Get_Type()));
+	}
+}
+
+void AIS_MainWindow::Set_Personal_Info(User* user) {
+	ui.Line_Login_Info->setText(user->Get_Login());
+	ui.Line_Login_Info->setEnabled(false);
+
+	ui.Line_Password_Info->setText(user->Get_Password());
+	ui.Line_Password_Info->setEnabled(false);
+
+	ui.Line_Name->setText(user->Get_Name());
+	ui.Line_Name->setEnabled(false);
+
+	ui.Line_Surname->setText(user->Get_Surname());
+	ui.Line_Surname->setEnabled(false);
+
+	ui.Line_Age->setText(user->Get_Age());
+	ui.Line_Age->setEnabled(false);
+
+	ui.Line_Type->setText(user->Get_Type());
+	ui.Line_Type->setEnabled(false);
+}
+
+void AIS_MainWindow::Set_List_Subjects_to_Teach() {
+	for (int i = 0; i < Get_Subjects().size(); i++) {
+		if (Subjects[i]->Get_Teacher() == "") {
+			int newRow = ui.List_Subjects_to_Teach->rowCount();
+			ui.List_Subjects_to_Teach->insertRow(newRow);
+			ui.List_Subjects_to_Teach->setItem(newRow, 0, new QTableWidgetItem(Subjects[i]->Get_Name()));
+			ui.List_Subjects_to_Teach->setItem(newRow, 1, new QTableWidgetItem(Subjects[i]->Get_Teacher()));
 		}
 	}
 }

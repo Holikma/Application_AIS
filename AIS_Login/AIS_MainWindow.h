@@ -4,6 +4,7 @@
 #include "ui_AIS_MainWindow.h"
 #include <QFile>
 #include <QMessageBox>
+#include <QTableWidget>
 
 
 class Subject {
@@ -11,14 +12,14 @@ class Subject {
 		QString Name;
 		QString Study_Year;
 		QString Type;
-		bool Has_Teacher;
+		QString Teacher;
 	public:
-		Subject(QString name, QString study_year, QString type, bool has_teacher) { Name = name; Study_Year = study_year; Type = type; Has_Teacher = has_teacher; };
+		Subject(QString name, QString study_year, QString type, QString teacher) { Name = name; Study_Year = study_year; Type = type; Teacher = teacher; };
 		QString Get_Name() { return this->Name; };
 		QString Get_Study_Year() { return this->Study_Year; };
 		QString Get_Type() { return this->Type; };
-		bool Get_Has_Teacher() { return this->Has_Teacher; };
-		void Set_Has_Teacher(bool has_teacher) { this->Has_Teacher = has_teacher; };
+		QString Get_Teacher() { return this->Teacher; };
+		void Set_Teacher(QString teacher) { this->Teacher = teacher; };
 };
 
 class Enrolled_Subject : public Subject {
@@ -26,7 +27,7 @@ class Enrolled_Subject : public Subject {
 		QString Mark;
 		int Attempts;
 	public:
-		Enrolled_Subject(QString name, QString study_year, QString type, bool has_teacher, QString mark, int attempts) : Subject(name, study_year, type, has_teacher) { Mark = mark; Attempts = attempts; };
+		Enrolled_Subject(QString name, QString study_year, QString type, QString teacher, QString mark, int attempts) : Subject(name, study_year, type, teacher) { Mark = mark; Attempts = attempts; };
 };
 
 class User {
@@ -104,9 +105,9 @@ class AIS_MainWindow : public QMainWindow{
 		QVector<Subject*> Subjects;
 		QMap<Subject*, QVector<Student*>> Database;
 
-
 	private slots:
 		void Generate_Report();
+		void Enroll_Subject();
 
 	public:
 		void closeEvent(QCloseEvent* event) override;
@@ -125,7 +126,10 @@ class AIS_MainWindow : public QMainWindow{
 		void Set_Teacher_Ui(User* user);
 		void Set_PhD_Student_Ui(User* user);
 		void Set_Admin_Ui(User* user);
-		void Table_Subjects_Available(User* user);
+		void List_Subjects(User* user);
+		void List_Enrolled_Subjects(User* user);
 		void Save_Users_to_File();
+		void Set_Personal_Info(User* user);
+		void Set_List_Subjects_to_Teach();
 };
 //name;password;role;first_name;last_name;age;year/role;en_subjects;te_subjects

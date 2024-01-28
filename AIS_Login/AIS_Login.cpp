@@ -5,6 +5,7 @@ AIS_Login::AIS_Login(QWidget *parent) : QMainWindow(parent){
 	Set_Environment();
 	connect(ui.Submit, SIGNAL(clicked()), this, SLOT(Check_Login()));
 	connect(mainWindow->Get_UI().Button_Logout, SIGNAL(clicked()), this, SLOT(Log_Out()));
+	connect(ui.Line_Password, SIGNAL(returnPressed()), this, SLOT(Check_Login()));
 }
 
 AIS_Login::~AIS_Login()
@@ -31,7 +32,7 @@ void AIS_Login::Check_Login() {
 		else if (user->Get_Type() == "Admin") {
 			mainWindow->Set_Admin_Ui(user);
 		}
-		else if (user->Get_Type() == "Phd_Student") {
+		else if (user->Get_Type() == "PhD_Student") {
 			mainWindow->Set_PhD_Student_Ui(user);
 		}
 		mainWindow->show();
