@@ -3,6 +3,7 @@
 #include <QMainWindow>
 #include "ui_AIS_MainWindow.h"
 #include <QFile>
+#include <QMessageBox>
 
 
 class Subject {
@@ -47,6 +48,7 @@ class User {
 		virtual QVector<Subject*> Get_Teaching_Subjects() { return QVector<Subject*>(); };
 		virtual void Enroll_Subject(Subject* subject) {};
 		virtual void Teach_Subject(Subject* subject) {};
+		virtual QString Get_Position() { return ""; };
 };
 
 class Person : public User{
@@ -68,7 +70,7 @@ class Employee : public Person {
 		QVector<Subject*> Teaching_Subjects;
 	public:
 		Employee(QString login, QString password, QString type, QString name, QString surname, QString age, QString position, QVector<Subject*> teaching_subjects);
-		QString Get_Position() { return Position; };
+		QString Get_Position() override { return Position; };
 		QVector<Subject*> Get_Teaching_Subjects() { return Teaching_Subjects; };
 		void Teach_Subject(Subject* subject) override;
 };
@@ -80,7 +82,7 @@ class Student : public Person {
 	public:
 		Student(QString login, QString password, QString type, QString name, QString surname, QString age, QString year, QVector<Enrolled_Subject*> enrolled_subjects);
 		void Enroll_Subject(Subject* subject) override;
-		QString Get_Year() { return Year; };
+		QString Get_Year() override { return Year; };
 		QVector<Enrolled_Subject*> Get_Enrolled_Subjects() override { return Enrolled_Subjects; };
 };
 
@@ -88,9 +90,9 @@ class Phd_Student : public Student {
 	private:
 		QVector<Subject*> Teaching_Subjects;
 	public:
+		Phd_Student(QString login, QString password, QString type, QString name, QString surname, QString age, QString year, QVector<Subject*> teaching_subjects, QVector<Enrolled_Subject*> enrolled_subjects);	
 		void Teach_Subject(Subject* subject) override;
 		QVector<Subject*> Get_Teaching_Subjects() override { return Teaching_Subjects; };
-		Phd_Student(QString login, QString password, QString type, QString name, QString surname, QString age, QString year, QVector<Subject*> teaching_subjects, QVector<Enrolled_Subject*> enrolled_subjects);	
 };
 
 class AIS_MainWindow : public QMainWindow{
@@ -102,10 +104,12 @@ class AIS_MainWindow : public QMainWindow{
 		QVector<Subject*> Subjects;
 		QMap<Subject*, QVector<Student*>> Database;
 
+
 	private slots:
-		
+		void Generate_Report();
 
 	public:
+		void closeEvent(QCloseEvent* event) override;
 		AIS_MainWindow(QWidget *parent = nullptr);
 		~AIS_MainWindow();
 		Ui::AIS_MainWindowClass Get_UI() { return ui; };
@@ -122,6 +126,6 @@ class AIS_MainWindow : public QMainWindow{
 		void Set_PhD_Student_Ui(User* user);
 		void Set_Admin_Ui(User* user);
 		void Table_Subjects_Available(User* user);
-
+		void Save_Users_to_File();
 };
 //name;password;role;first_name;last_name;age;year/role;en_subjects;te_subjects

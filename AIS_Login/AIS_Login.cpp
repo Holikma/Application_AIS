@@ -5,7 +5,6 @@ AIS_Login::AIS_Login(QWidget *parent) : QMainWindow(parent){
 	Set_Environment();
 	connect(ui.Submit, SIGNAL(clicked()), this, SLOT(Check_Login()));
 	connect(mainWindow->Get_UI().Button_Logout, SIGNAL(clicked()), this, SLOT(Log_Out()));
-
 }
 
 AIS_Login::~AIS_Login()

@@ -8,4 +8,4 @@ user8;pass8;PhD_Student;Henry;Gray;29;7
 user3;pass3;Teacher;Carol;Anderson;35;User
 user6;pass6;Teacher;Frank;Evans;40;Admin
 user9;pass9;Teacher;Iris;Hughes;37;User
-Admin;Admin;Admin;Admin;Admin;Admin;Admin
+Admin;Admin;Admin;Admin;Admin;Admin;Admin;Mathematics_1

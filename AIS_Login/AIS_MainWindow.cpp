@@ -42,6 +42,7 @@ void Employee::Teach_Subject(Subject* subject) {
 
 AIS_MainWindow::AIS_MainWindow(QWidget* parent) : QMainWindow(parent) {
 	ui.setupUi(this);
+	connect(ui.Button_Generate_Report, SIGNAL(clicked()), this, SLOT(Generate_Report()));
 }
 
 AIS_MainWindow::~AIS_MainWindow()
@@ -103,8 +104,7 @@ void AIS_MainWindow::Load_Users() {
 			if (fields.size() > 7) {
 				QStringList te_sub = fields[7].split(',');
 				for (int i = 0; i < te_sub.size(); i++) {
-					Subject* teaching_sub = Get_Subject(te_sub[i]);
-					admin->Teach_Subject(teaching_sub);
+					admin->Teach_Subject(Get_Subject(te_sub[i]));
 				}
 			}
 			QSharedPointer<User> userSharedPointer(admin);
@@ -156,6 +156,16 @@ void AIS_MainWindow::Print_Users() {
 		qDebug() << "Credentials: " << user->Get_Login() << user->Get_Password() << user->Get_Type();
 		qDebug() << "Enrolled Subjects: " << user->Get_Enrolled_Subjects();
 		qDebug() << "Teaching Subjects:" << user->Get_Teaching_Subjects();
+		if(user->Get_Type() == "Student") {
+			qDebug() << "Year: " << user->Get_Year();
+		}
+		else if (user->Get_Type() == "Teacher" || user->Get_Type() == "Admin") {
+			qDebug() << "Position: " << user->Get_Position();
+		}
+		else if (user->Get_Type() == "PhD_Student") {
+			qDebug() << "Year: " << user->Get_Year();
+		}
+		qDebug() << "----------------------------------";
 	}
 }
 
@@ -174,6 +184,9 @@ void AIS_MainWindow::Set_Student_Ui(User* user) {
 	ui.TabWidget->setTabVisible(2, false);
 	ui.TabWidget->setTabVisible(3, false);
 	Table_Subjects_Available(user);
+	ui.Line_Current_User->setText(user->Get_Name() + " " + user->Get_Surname());
+	ui.Line_Current_User->setEnabled(false);
+
 }
 
 void AIS_MainWindow::Set_Teacher_Ui(User* user) {
@@ -181,6 +194,8 @@ void AIS_MainWindow::Set_Teacher_Ui(User* user) {
 	ui.TabWidget->setTabVisible(1, true);
 	ui.TabWidget->setTabVisible(2, true);
 	ui.TabWidget->setTabVisible(3, false);
+	ui.Line_Current_User->setText(user->Get_Name() + " " + user->Get_Surname());
+	ui.Line_Current_User->setEnabled(false);
 
 
 }
@@ -190,6 +205,8 @@ void AIS_MainWindow::Set_Admin_Ui(User* user) {
 	ui.TabWidget->setTabVisible(1, true);
 	ui.TabWidget->setTabVisible(2, true);
 	ui.TabWidget->setTabVisible(3, true);
+	ui.Line_Current_User->setText(user->Get_Name() + " " + user->Get_Surname());
+	ui.Line_Current_User->setEnabled(false);
 }
 
 void AIS_MainWindow::Set_PhD_Student_Ui(User* user) {
@@ -197,6 +214,8 @@ void AIS_MainWindow::Set_PhD_Student_Ui(User* user) {
 	ui.TabWidget->setTabVisible(1, true);
 	ui.TabWidget->setTabVisible(2, true);
 	ui.TabWidget->setTabVisible(3, false);
+	ui.Line_Current_User->setText(user->Get_Name() + " " + user->Get_Surname());
+	ui.Line_Current_User->setEnabled(false);
 }
 
 void AIS_MainWindow::Table_Subjects_Available(User* user) {
@@ -207,5 +226,101 @@ void AIS_MainWindow::Table_Subjects_Available(User* user) {
 		ui.Table_Subjects_Available->setItem(i, 0, new QTableWidgetItem(Subjects[i]->Get_Name()));
 		ui.Table_Subjects_Available->setItem(i, 1, new QTableWidgetItem(Subjects[i]->Get_Study_Year()));
 		ui.Table_Subjects_Available->setItem(i, 2, new QTableWidgetItem(Subjects[i]->Get_Type()));
+	}
+}
+
+void AIS_MainWindow::Generate_Report() {
+	User* current_user = Get_User(ui.Line_Current_User->text());
+	QFile file("User_Report.txt");
+	if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+		return;
+}
+
+void AIS_MainWindow::closeEvent(QCloseEvent* event) {
+	QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(this, "Exit", "Do you want to save your changes before exiting?", QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+	if (reply == QMessageBox::Save) {
+		Save_Users_to_File();
+	}
+}
+
+void AIS_MainWindow::Save_Users_to_File() {
+	QFile file("Users_out.txt");
+	if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+		return;
+	QTextStream out(&file);
+	for (int i = 0; i < Users.size(); i++) {
+		QSharedPointer<User> user = Users[i];
+		out << user->Get_Login() << ";" << user->Get_Password() << ";" << user->Get_Type() << ";" << user->Get_Name() << ";" << user->Get_Surname() << ";" << user->Get_Age() << ";";
+		if (user->Get_Type() == "Student") {
+			out << user->Get_Year();
+			if (user->Get_Enrolled_Subjects().size() > 0) {
+				out << ";";
+				for (int j = 0; j < user->Get_Enrolled_Subjects().size(); j++) {
+					if (j == user->Get_Enrolled_Subjects().size() - 1) {
+						out << user->Get_Enrolled_Subjects()[j]->Get_Name();
+					}
+					else {
+						out << user->Get_Enrolled_Subjects()[j]->Get_Name() << ",";
+					}
+				}
+			}
+		}
+		else if (user->Get_Type() == "PhD_Student") {
+			out << user->Get_Year();
+			if (user->Get_Teaching_Subjects().size() > 0) {
+				out << ";";
+				for (int j = 0; j < user->Get_Teaching_Subjects().size(); j++) {
+					if (j == user->Get_Teaching_Subjects().size() - 1) {
+						out << user->Get_Teaching_Subjects()[j]->Get_Name();
+					}
+					else {
+						out << user->Get_Teaching_Subjects()[j]->Get_Name() << ",";
+					}
+				}
+			}
+			if (user->Get_Enrolled_Subjects().size() > 0) {
+				out << ";";
+				for (int j = 0; j < user->Get_Enrolled_Subjects().size(); j++) {
+					if (j == user->Get_Enrolled_Subjects().size() - 1) {
+						out << user->Get_Enrolled_Subjects()[j]->Get_Name();
+					}
+					else {
+						out << user->Get_Enrolled_Subjects()[j]->Get_Name() << ",";
+					}
+				}
+			}
+		}
+		else if (user->Get_Type() == "Teacher") {
+			out << user->Get_Position();
+			if (user->Get_Teaching_Subjects().size() > 0) {
+				out << ";";
+				for (int j = 0; j < user->Get_Teaching_Subjects().size(); j++) {
+					if (j == user->Get_Teaching_Subjects().size() - 1) {
+						out << user->Get_Teaching_Subjects()[j]->Get_Name();
+					}
+					else {
+						out << user->Get_Teaching_Subjects()[j]->Get_Name() << ",";
+					}
+				}
+			}
+		}
+		else if (user->Get_Type() == "Admin") {
+			out << user->Get_Position();
+			if (user->Get_Teaching_Subjects().size() > 0) {
+				out << ";";
+				for (int j = 0; j < user->Get_Teaching_Subjects().size(); j++) {
+					if (j == user->Get_Teaching_Subjects().size() - 1) {
+						out << user->Get_Teaching_Subjects()[j]->Get_Name();
+					}
+					else {
+						out << user->Get_Teaching_Subjects()[j]->Get_Name() << ",";
+					}
+				}
+			}
+		}
+		if (i != Users.size() - 1) {
+			out << "\n";
+		}
 	}
 }
