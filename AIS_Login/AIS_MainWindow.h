@@ -26,7 +26,7 @@ class Enrolled_Subject : public Subject {
 	private:
 		QVector<QString> Marks;
 		int Attempts;
-		bool Signed_for_Exam;
+		bool Signed_for_Exam; 
 	public:
 		Enrolled_Subject(QString name, QString study_year, QString type, QString teacher, QVector<QString> mark, int attempts, bool signed_for_exam) : Subject(name, study_year, type, teacher) { Marks = mark; Attempts = attempts; Signed_for_Exam = signed_for_exam; };
 		QVector<QString> Get_Marks() { return Marks; };
@@ -125,6 +125,7 @@ class AIS_MainWindow : public QMainWindow{
 		void List_Enrolled_Students(QTableWidget* sourceList);
 		void Sign_for_Exam();
 		void Load_New_Subjects();
+		void List_Awaiting_Exam_Students(Subject* subject);
 
 	public:
 		void closeEvent(QCloseEvent* event) override;
@@ -153,10 +154,11 @@ class AIS_MainWindow : public QMainWindow{
 		void Save_Users_to_File();
 		void Update_Database(Subject* subject, Student* Student);
 		void Reset_UI();
-		void List_Enrolled_Teaching_Subjects(User* user);
 		void List_Signed_for_Exam_Subjects(User* user);
-		void Save_Marks_to_File(User* user);
-		void Load_Marks_from_File(User* user);
+		void Save_Marks_to_File();
+		void Load_Marks_from_File();
+		void Save_Subjects_to_File();
+		
 		
 };
 //name;password;role;first_name;last_name;age;year/role;en_subjects;te_subjects

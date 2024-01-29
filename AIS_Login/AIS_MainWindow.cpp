@@ -46,6 +46,7 @@ AIS_MainWindow::AIS_MainWindow(QWidget* parent) : QMainWindow(parent) {
 	connect(ui.Button_Enroll, SIGNAL(clicked()), this, SLOT(Enroll_Subject()));
 	connect(ui.Button_Teach, SIGNAL(clicked()), this, SLOT(Teach_Subject()));
 	connect(ui.List_Teaching_Subjects, &QTableWidget::itemClicked, this, [this]() {List_Enrolled_Students(ui.List_Teaching_Subjects);});
+	connect(ui.List_Teaching_Subjects, &QTableWidget::itemClicked, this, [this]() {List_Awaiting_Exam_Students(Get_Subject(ui.List_Teaching_Subjects->item(ui.List_Teaching_Subjects->currentRow(), 0)->text())); });
 	connect(ui.Button_Sign_for_Exam, SIGNAL(clicked()), this, SLOT(Sign_for_Exam()));
 	connect(ui.Button_Upload_UI, SIGNAL(clicked()), this, SLOT(Load_New_Subjects()));
 }
@@ -225,7 +226,7 @@ void AIS_MainWindow::Set_Student_Ui(User* user) {
 	ui.TabWidget->setTabVisible(3, false);
 	ui.Line_Current_User->setText(user->Get_Login());
 	ui.Line_Current_User->setEnabled(false);
-	Load_Marks_from_File(user);
+	Load_Marks_from_File();
 	List_Subjects(user);
 	List_Enrolled_Subjects(user);
 	Set_Personal_Info(user);
@@ -242,7 +243,10 @@ void AIS_MainWindow::Set_Teacher_Ui(User* user) {
 	ui.Line_Current_User->setEnabled(false);
 	List_Subjects_to_Teach();
 	Set_Personal_Info(user);
-	List_Enrolled_Teaching_Subjects(user);
+	List_Teaching_Subjects(user);
+	List_Enrolled_Subjects(user);
+	Load_Marks_from_File();
+	List_Signed_for_Exam_Subjects(user);
 }
 
 void AIS_MainWindow::Set_Admin_Ui(User* user) {
@@ -254,7 +258,6 @@ void AIS_MainWindow::Set_Admin_Ui(User* user) {
 	ui.Line_Current_User->setEnabled(false);
 	Set_Personal_Info(user);
 	List_Subjects_to_Teach();
-	List_Enrolled_Teaching_Subjects(user);
 }
 
 void AIS_MainWindow::Set_PhD_Student_Ui(User* user) {
@@ -264,12 +267,11 @@ void AIS_MainWindow::Set_PhD_Student_Ui(User* user) {
 	ui.TabWidget->setTabVisible(3, false);
 	ui.Line_Current_User->setText(user->Get_Login());
 	ui.Line_Current_User->setEnabled(false);
-	Load_Marks_from_File(user);
+	Load_Marks_from_File();
 	List_Subjects(user);
 	List_Enrolled_Subjects(user);
 	Set_Personal_Info(user);
 	List_Subjects_to_Teach();
-	List_Enrolled_Teaching_Subjects(user);
 	List_Signed_for_Exam_Subjects(user);
 }
 
@@ -295,7 +297,7 @@ void AIS_MainWindow::Set_Personal_Info(User* user) {
 
 void AIS_MainWindow::List_Subjects(User* user) {
 	ui.List_Subjects->clear();
-	ui.List_Subjects->setRowCount(Subjects.size());
+	ui.List_Subjects->setRowCount(0);
 	ui.List_Subjects->setColumnCount(2);
 	ui.List_Subjects->setEditTriggers(QAbstractItemView::NoEditTriggers);
 	ui.List_Subjects->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -306,11 +308,12 @@ void AIS_MainWindow::List_Subjects(User* user) {
 	ui.List_Subjects->setColumnWidth(0, 300);
 	ui.List_Subjects->setColumnWidth(1, 150);
 	for (int i = 0; i < Subjects.size(); i++) {
-		if (Subjects[i]->Get_Study_Year() != user->Get_Year()) {
-			continue;
+		if (Subjects[i]->Get_Study_Year() == user->Get_Year()) {
+			int newRow = ui.List_Subjects->rowCount();
+			ui.List_Subjects->insertRow(newRow);
+			ui.List_Subjects->setItem(newRow, 0, new QTableWidgetItem(Subjects[i]->Get_Name()));
+			ui.List_Subjects->setItem(newRow, 1, new QTableWidgetItem(Subjects[i]->Get_Teacher()));
 		}
-		ui.List_Subjects->setItem(i, 0, new QTableWidgetItem(Subjects[i]->Get_Name()));
-		ui.List_Subjects->setItem(i, 1, new QTableWidgetItem(Subjects[i]->Get_Teacher()));
 	}
 }
 
@@ -322,13 +325,9 @@ void AIS_MainWindow::Generate_Report() {
 }
 
 void AIS_MainWindow::closeEvent(QCloseEvent* event) {
-	//QMessageBox::StandardButton reply;
-    //reply = QMessageBox::question(this, "Exit", "Do you want to save your changes before exiting?");
-	User* user = Get_User(ui.Line_Current_User->text());
-	if (user->Get_Type() == "Student" || user->Get_Type() == "PhD_Student") {
-		Save_Marks_to_File(user);
-	}
 	Save_Users_to_File();
+	Save_Subjects_to_File();
+	Save_Marks_to_File();
 	Reset_UI();
 }
 
@@ -351,7 +350,6 @@ void AIS_MainWindow::Reset_UI() {
 	ui.TabWidget->setTabVisible(1, true);
 	ui.TabWidget->setTabVisible(2, true);
 	ui.TabWidget->setTabVisible(3, true);
-
 }
 
 void AIS_MainWindow::Save_Users_to_File() {
@@ -437,10 +435,6 @@ void AIS_MainWindow::Save_Users_to_File() {
 
 void AIS_MainWindow::Enroll_Subject() {
 	User* current_user = Get_User(ui.Line_Current_User->text());
-	QTableWidgetItem* currentItem = ui.List_Subjects->currentItem();
-	if (!currentItem) {
-		return;
-	}
 	QString subject_name = ui.List_Subjects->item(ui.List_Subjects->currentRow(), 0)->text();
 	Subject* subject = Get_Subject(subject_name);
 	for(int i = 0; i < current_user->Get_Enrolled_Subjects().size(); i++) {
@@ -470,6 +464,7 @@ void AIS_MainWindow::List_Enrolled_Subjects(User* user) {
 }
 
 void AIS_MainWindow::List_Subjects_to_Teach() {
+	ui.List_Subjects_to_Teach->clear();
 	ui.List_Subjects_to_Teach->setRowCount(0);
 	ui.List_Subjects_to_Teach->setColumnCount(2);
 	ui.List_Subjects_to_Teach->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -480,9 +475,6 @@ void AIS_MainWindow::List_Subjects_to_Teach() {
 	ui.List_Subjects_to_Teach->setHorizontalHeaderLabels(QStringList() << "Name" << "Teacher");
 
 	for (int i = 0; i < Get_Subjects().size(); i++) {
-		if (Subjects[i]->Get_Teacher() != "") {
-			continue;
-		}
 		int newRow = ui.List_Subjects_to_Teach->rowCount();
 		ui.List_Subjects_to_Teach->insertRow(newRow);
 		ui.List_Subjects_to_Teach->setItem(newRow, 0, new QTableWidgetItem(Subjects[i]->Get_Name()));
@@ -491,6 +483,7 @@ void AIS_MainWindow::List_Subjects_to_Teach() {
 }
 
 void AIS_MainWindow::List_Teaching_Subjects(User* user) {
+	ui.List_Teaching_Subjects->clear();
 	ui.List_Teaching_Subjects->setRowCount(user->Get_Teaching_Subjects().size());
 	ui.List_Teaching_Subjects->setColumnCount(2);
 	ui.List_Teaching_Subjects->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -498,7 +491,7 @@ void AIS_MainWindow::List_Teaching_Subjects(User* user) {
 	ui.List_Teaching_Subjects->setSelectionMode(QAbstractItemView::SingleSelection);
 	ui.List_Teaching_Subjects->setShowGrid(false);
 	ui.List_Teaching_Subjects->verticalHeader()->hide();
-	ui.List_Teaching_Subjects->setHorizontalHeaderLabels(QStringList() << "Name" << "Teacher");
+	ui.List_Teaching_Subjects->horizontalHeader()->hide();
 	for (int i = 0; i < user->Get_Teaching_Subjects().size(); i++) {
 		ui.List_Teaching_Subjects->setItem(i, 0, new QTableWidgetItem(user->Get_Teaching_Subjects()[i]->Get_Name()));
 		ui.List_Teaching_Subjects->setItem(i, 1, new QTableWidgetItem(user->Get_Teaching_Subjects()[i]->Get_Teacher()));
@@ -517,32 +510,18 @@ void AIS_MainWindow::List_Enrolled_Students(QTableWidget* sourceList) {
 	}
 }
 
-void AIS_MainWindow::List_Enrolled_Teaching_Subjects(User* user) {
-	ui.List_Teaching_Subjects->setRowCount(user->Get_Teaching_Subjects().size());
-	ui.List_Teaching_Subjects->setColumnCount(2);
-	ui.List_Teaching_Subjects->setEditTriggers(QAbstractItemView::NoEditTriggers);
-	ui.List_Teaching_Subjects->setSelectionBehavior(QAbstractItemView::SelectRows);
-	ui.List_Teaching_Subjects->setSelectionMode(QAbstractItemView::SingleSelection);
-	ui.List_Teaching_Subjects->setShowGrid(false);
-	ui.List_Teaching_Subjects->verticalHeader()->hide();
-	ui.List_Teaching_Subjects->setHorizontalHeaderLabels(QStringList() << "Name" << "Teacher");
-	for (int i = 0; i < user->Get_Teaching_Subjects().size(); i++) {
-		ui.List_Teaching_Subjects->setItem(i, 0, new QTableWidgetItem(user->Get_Teaching_Subjects()[i]->Get_Name()));
-		ui.List_Teaching_Subjects->setItem(i, 1, new QTableWidgetItem(user->Get_Teaching_Subjects()[i]->Get_Teacher()));
-	}
-}
-
 void AIS_MainWindow::Teach_Subject() {
 	User* current_user = Get_User(ui.Line_Current_User->text());
 	QString subject_name = ui.List_Subjects_to_Teach->item(ui.List_Subjects_to_Teach->currentRow(), 0)->text();
 	Subject* subject = Get_Subject(subject_name);
-	for (int i = 0; i < current_user->Get_Teaching_Subjects().size(); i++) {
-		if (current_user->Get_Teaching_Subjects()[i]->Get_Name() == subject_name) {
-			return;
-		}
+	if (subject->Get_Teacher() != "") {
+		return;
 	}
+	subject->Set_Teacher(current_user->Get_Name() + " " + current_user->Get_Surname());
 	current_user->Teach_Subject(subject);
+	List_Enrolled_Subjects(current_user);
 	List_Teaching_Subjects(current_user);
+	List_Subjects_to_Teach();
 }
 
 void AIS_MainWindow::Update_Database(Subject* subject,Student* student) {
@@ -576,6 +555,8 @@ void AIS_MainWindow::List_Signed_for_Exam_Subjects(User* user) {
 	ui.List_Subjects_for_Grading->setSelectionBehavior(QAbstractItemView::SelectRows);
 	ui.List_Subjects_for_Grading->setSelectionMode(QAbstractItemView::SingleSelection);
 	ui.List_Subjects_for_Grading->setShowGrid(false);
+	ui.List_Subjects_for_Grading->verticalHeader()->hide();
+	ui.List_Subjects_for_Grading->setHorizontalHeaderLabels(QStringList() << "Name");
 	for (int i = 0; i < user->Get_Enrolled_Subjects().size(); i++) {
 		if (user->Get_Enrolled_Subjects()[i]->Get_Signed_for_Exam() == 1) {
 			int newRow = ui.List_Subjects_for_Grading->rowCount();
@@ -585,38 +566,48 @@ void AIS_MainWindow::List_Signed_for_Exam_Subjects(User* user) {
 	}
 }
 
-void AIS_MainWindow::Save_Marks_to_File(User* user) {
-	QFile file("Grades/" + user->Get_Login() + "_grades.csv");
-	if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
-		return;
-	QTextStream out(&file);
-	QVector<Enrolled_Subject*> En_Sub = user->Get_Enrolled_Subjects();
-	for (int i = 0; i < user->Get_Enrolled_Subjects().size(); i++) {
-		out << En_Sub[i]->Get_Name() << ";" << En_Sub[i]->Get_Marks()[0] << ";" << En_Sub[i]->Get_Marks()[1] << ";" << En_Sub[i]->Get_Marks()[2] << ";" << En_Sub[i]->Get_Attempts() << ";" << En_Sub[i]->Get_Signed_for_Exam();
-		if (i != user->Get_Enrolled_Subjects().size() - 1) {
-			out << "\n";
-		}
-	}
-	file.close();
-}
-
-void AIS_MainWindow::Load_Marks_from_File(User* user) {
-	QFile file("Grades/" + user->Get_Login() + "_grades.csv");
-	if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-		return;
-	QTextStream in(&file);
-	while (!in.atEnd()) {
-		QString line = in.readLine();
-		QStringList fields = line.split(';');
-		for (int i = 0; i < user->Get_Enrolled_Subjects().size(); i++) {
-			if (user->Get_Enrolled_Subjects()[i]->Get_Name() == fields[0]) {
-				user->Get_Enrolled_Subjects()[i]->Set_Marks({ fields[1], fields[2], fields[3] });
-				user->Get_Enrolled_Subjects()[i]->Set_Attempts(fields[4].toInt());
-				user->Get_Enrolled_Subjects()[i]->Set_Signed_for_Exam(fields[5].toInt());
+void AIS_MainWindow::Save_Marks_to_File() {
+	for (int i = 0; i < Users.size(); i++) {
+		User* user = Users[i].data();
+		QFile file("Grades/" + user->Get_Login() + "_grades.csv");
+		if (user->Get_Type() == "Student" || user->Get_Type() == "PhD_Student") {
+			if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+				return;
+			QTextStream out(&file);
+			QVector<Enrolled_Subject*> En_Sub = user->Get_Enrolled_Subjects();
+			for (int i = 0; i < user->Get_Enrolled_Subjects().size(); i++) {
+				out << En_Sub[i]->Get_Name() << ";" << En_Sub[i]->Get_Marks()[0] << ";" << En_Sub[i]->Get_Marks()[1] << ";" << En_Sub[i]->Get_Marks()[2] << ";" << En_Sub[i]->Get_Attempts() << ";" << En_Sub[i]->Get_Signed_for_Exam();
+				if (i != user->Get_Enrolled_Subjects().size() - 1) {
+					out << "\n";
+				}
 			}
 		}
+		file.close();
 	}
-	file.close();
+}
+
+void AIS_MainWindow::Load_Marks_from_File() {
+	for (int i = 0; i < Users.size(); i++) {
+		User* user = Users[i].data();
+		if (user->Get_Type() == "Student" || user->Get_Type() == "PhD_Student") {
+			QFile file("Grades/" + user->Get_Login() + "_grades.csv");
+			if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+				return;
+			QTextStream in(&file);
+			while (!in.atEnd()) {
+				QString line = in.readLine();
+				QStringList fields = line.split(';');
+				for (int i = 0; i < user->Get_Enrolled_Subjects().size(); i++) {
+					if (user->Get_Enrolled_Subjects()[i]->Get_Name() == fields[0]) {
+						user->Get_Enrolled_Subjects()[i]->Set_Marks({ fields[1], fields[2], fields[3] });
+						user->Get_Enrolled_Subjects()[i]->Set_Attempts(fields[4].toInt());
+						user->Get_Enrolled_Subjects()[i]->Set_Signed_for_Exam(fields[5].toInt());
+					}
+				}
+			}
+			file.close();
+		}
+	}
 }
 
 void AIS_MainWindow::Load_New_Subjects() {
@@ -650,4 +641,44 @@ void AIS_MainWindow::Load_New_Subjects() {
 	file.close();
 	List_Subjects_to_Teach();
 	
+}
+
+void AIS_MainWindow::Save_Subjects_to_File() {
+	QFile file("predmety_1.txt");
+	if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+		return;
+	QTextStream out(&file);
+	for (int i = 0; i < Subjects.size(); i++) {
+		out << Subjects[i]->Get_Name() << "," << Subjects[i]->Get_Study_Year() << "," << Subjects[i]->Get_Type();
+		if (Subjects[i]->Get_Teacher() != "") {
+			out << "," << Subjects[i]->Get_Teacher();
+		}
+		if (i != Subjects.size() - 1) {
+			out << "\n";
+		}
+	}
+	file.close();
+}
+
+void AIS_MainWindow::List_Awaiting_Exam_Students(Subject* subject) {
+	ui.List_Awaiting_Students_for_Exam->clear();
+	ui.List_Awaiting_Students_for_Exam->setRowCount(0);
+	ui.List_Awaiting_Students_for_Exam->setColumnCount(1);
+	ui.List_Awaiting_Students_for_Exam->setEditTriggers(QAbstractItemView::NoEditTriggers);
+	ui.List_Awaiting_Students_for_Exam->setSelectionBehavior(QAbstractItemView::SelectRows);
+	ui.List_Awaiting_Students_for_Exam->setSelectionMode(QAbstractItemView::SingleSelection);
+	ui.List_Awaiting_Students_for_Exam->setShowGrid(false);
+	ui.List_Awaiting_Students_for_Exam->verticalHeader()->hide();
+	ui.List_Awaiting_Students_for_Exam->setHorizontalHeaderLabels(QStringList() << "Name");
+	for (int i = 0; i < Database[subject].size(); i++) {
+		for (int j = 0; j < Database[subject][i]->Get_Enrolled_Subjects().size(); j++) {
+			if (Database[subject][i]->Get_Enrolled_Subjects()[j]->Get_Name() == subject->Get_Name()) {
+				if (Database[subject][i]->Get_Enrolled_Subjects()[j]->Get_Signed_for_Exam()) {
+					int newRow = ui.List_Awaiting_Students_for_Exam->rowCount();
+					ui.List_Awaiting_Students_for_Exam->insertRow(newRow);
+					ui.List_Awaiting_Students_for_Exam->setItem(newRow, 0, new QTableWidgetItem(Database[subject][i]->Get_Name() + " " + Database[subject][i]->Get_Surname()));
+				}
+			}
+		}
+	}
 }

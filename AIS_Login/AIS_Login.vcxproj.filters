@@ -59,5 +59,6 @@
     <Text Include="predmety_1.txt" />
     <Text Include="predmety_2.txt" />
     <Text Include="Users_out.txt" />
+    <Text Include="predmety_3.txt" />
   </ItemGroup>
 </Project>
