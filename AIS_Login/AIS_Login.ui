@@ -30,7 +30,15 @@
     <item>
      <layout class="QFormLayout" name="formLayout">
       <item row="0" column="1">
-       <widget class="QListWidget" name="List_Users"/>
+       <widget class="QListWidget" name="List_Users">
+        <property name="font">
+         <font>
+          <family>Trebuchet MS</family>
+          <pointsize>16</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>

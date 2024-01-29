@@ -37,6 +37,7 @@ void AIS_Login::Check_Login() {
 			mainWindow->Set_PhD_Student_Ui(user);
 		}
 		mainWindow->show();
+		ui.Line_Password->clear();
 		this->close();
 	}
 	else {
