@@ -225,6 +225,7 @@ void AIS_MainWindow::Set_Student_Ui(User* user) {
 	ui.TabWidget->setTabVisible(1, true);
 	ui.TabWidget->setTabVisible(2, false);
 	ui.TabWidget->setTabVisible(3, false);
+	ui.TabWidget->setCurrentIndex(0);
 	ui.Line_Current_User->setText(user->Get_Login());
 	ui.Line_Current_User->setEnabled(false);
 	Load_Marks_from_File();
@@ -240,6 +241,7 @@ void AIS_MainWindow::Set_Teacher_Ui(User* user) {
 	ui.TabWidget->setTabVisible(1, true);
 	ui.TabWidget->setTabVisible(2, true);
 	ui.TabWidget->setTabVisible(3, false);
+	ui.TabWidget->setCurrentIndex(1);
 	ui.Line_Current_User->setText(user->Get_Login());
 	ui.Line_Current_User->setEnabled(false);
 	Load_Marks_from_File();
@@ -255,6 +257,7 @@ void AIS_MainWindow::Set_Admin_Ui(User* user) {
 	ui.TabWidget->setTabVisible(1, true);
 	ui.TabWidget->setTabVisible(2, true);
 	ui.TabWidget->setTabVisible(3, true);
+	ui.TabWidget->setCurrentIndex(1);
 	ui.Line_Current_User->setText(user->Get_Login());
 	ui.Line_Current_User->setEnabled(false);
 	Set_Personal_Info(user);
@@ -266,6 +269,7 @@ void AIS_MainWindow::Set_PhD_Student_Ui(User* user) {
 	ui.TabWidget->setTabVisible(1, true);
 	ui.TabWidget->setTabVisible(2, true);
 	ui.TabWidget->setTabVisible(3, false);
+	ui.TabWidget->setCurrentIndex(0);
 	ui.Line_Current_User->setText(user->Get_Login());
 	ui.Line_Current_User->setEnabled(false);
 	Load_Marks_from_File();
