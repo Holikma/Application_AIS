@@ -1,10 +1,10 @@
-Student_1;pass1;Student;Alice;Johnson;20;2
+Student_1;pass1;Student;Alice;Johnson;20;2;English 1,Introduction to Computer Science 1
 user4;pass4;Student;David;Brown;19;2
 user10;pass10;Student;Jack;Ingram;22;5
 PHD_Student_2;pass2;PhD_Student;Bob;Smith;28;6
 user5;pass5;PhD_Student;Emily;Davis;26;6
 user8;pass8;PhD_Student;Henry;Gray;29;7
-Teacher_3;pass3;Teacher;Carol;Anderson;35;User
+Teacher_3;pass3;Teacher;Carol;Anderson;35;User;Mathematics 1,English 1
 user6;pass6;Teacher;Frank;Evans;40;Admin
 user9;pass9;Teacher;Iris;Hughes;37;User
 Admin;Admin;Admin;Admin;Admin;Admin;Admin

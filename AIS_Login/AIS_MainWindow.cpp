@@ -320,9 +320,19 @@ void AIS_MainWindow::List_Subjects(User* user) {
 
 void AIS_MainWindow::Generate_Report() {
 	User* current_user = Get_User(ui.Line_Current_User->text());
-	QFile file("User_Report.txt");
+	QFile file(current_user->Get_Login() + "_Report.txt");
 	if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
 		return;
+	QTextStream out(&file);
+	out << "Report for " << current_user->Get_Name() << " " << current_user->Get_Surname() << "\n";
+	out << "----------------------------------\n";
+	out << "Enrolled Subjects:\n";
+	for (int i = 0; i < current_user->Get_Enrolled_Subjects().size(); i++) {
+		out << current_user->Get_Enrolled_Subjects()[i]->Get_Name() << "\t" << current_user->Get_Enrolled_Subjects()[i]->Get_Mark(0) << "\t" << current_user->Get_Enrolled_Subjects()[i]->Get_Mark(1) << "\t" << current_user->Get_Enrolled_Subjects()[i]->Get_Mark(2) << "\n";
+	}
+	out << "----------------------------------\n";
+	file.close();
+	QMessageBox::information(this, "Report", "Report generated successfully!");
 }
 
 void AIS_MainWindow::closeEvent(QCloseEvent* event) {
@@ -457,7 +467,9 @@ void AIS_MainWindow::List_Enrolled_Subjects(User* user) {
 	ui.List_Enrolled_Subjects->setSelectionMode(QAbstractItemView::SingleSelection);
 	ui.List_Enrolled_Subjects->setShowGrid(false);
 	ui.List_Enrolled_Subjects->verticalHeader()->hide();
-	ui.List_Enrolled_Subjects->setHorizontalHeaderLabels(QStringList() << "Name" << "Study Year" << "Type" << "First Attempt" << "Second Attempt" << "Third Attempt");
+	ui.List_Enrolled_Subjects->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+	ui.List_Enrolled_Subjects->resizeColumnsToContents();
+	ui.List_Enrolled_Subjects->setHorizontalHeaderLabels(QStringList() << "Name of the Enrolled Subject" << "Study Year" << "Type" << "First Attempt" << "Second Attempt" << "Third Attempt");
 	for (int i = 0; i < user->Get_Enrolled_Subjects().size(); i++) {
 		ui.List_Enrolled_Subjects->setItem(i, 0, new QTableWidgetItem(user->Get_Enrolled_Subjects()[i]->Get_Name()));
 		ui.List_Enrolled_Subjects->setItem(i, 1, new QTableWidgetItem(user->Get_Enrolled_Subjects()[i]->Get_Study_Year()));
@@ -703,20 +715,25 @@ void AIS_MainWindow::Grade_Student() {
 	QWidget* central_widget = new QWidget();
 	QVBoxLayout* layout = new QVBoxLayout();
 	QLabel* label = new QLabel("Grade: ");
-	QLineEdit* line_edit = new QLineEdit();
+	QComboBox* gradeComboBox = new QComboBox();
+
+	QStringList gradeList;
+	gradeList << "A" << "B" << "C" << "D" << "E" << "Fx";
+	gradeComboBox->addItems(gradeList);
 	QPushButton* button = new QPushButton("Grade");
 	layout->addWidget(label);
-	layout->addWidget(line_edit);
+	layout->addWidget(gradeComboBox);
 	layout->addWidget(button);
 	central_widget->setLayout(layout);
 	grade_window->setCentralWidget(central_widget);
 	grade_window->show();
-	connect(button, &QPushButton::clicked, this, [this, grade_window, line_edit, current_user, subject, student_name]() {
+	connect(button, &QPushButton::clicked, this, [this, grade_window, gradeComboBox, current_user, subject, student_name]() {
+		QString selectedGrade = gradeComboBox->currentText();
 		for (int i = 0; i < Database[subject].size(); i++) {
 			if (Database[subject][i]->Get_Name() + " " + Database[subject][i]->Get_Surname() == student_name) {
 				for (int j = 0; j < Database[subject][i]->Get_Enrolled_Subjects().size(); j++) {
 					if (Database[subject][i]->Get_Enrolled_Subjects()[j]->Get_Name() == subject->Get_Name()) {
-						Database[subject][i]->Get_Enrolled_Subjects()[j]->Set_Mark(Database[subject][i]->Get_Enrolled_Subjects()[j]->Get_Attempts(), line_edit->text());
+						Database[subject][i]->Get_Enrolled_Subjects()[j]->Set_Mark(Database[subject][i]->Get_Enrolled_Subjects()[j]->Get_Attempts(), selectedGrade);
 						Database[subject][i]->Get_Enrolled_Subjects()[j]->Set_Attempts(Database[subject][i]->Get_Enrolled_Subjects()[j]->Get_Attempts() + 1);
 						Database[subject][i]->Get_Enrolled_Subjects()[j]->Set_Signed_for_Exam(false);
 						grade_window->close();

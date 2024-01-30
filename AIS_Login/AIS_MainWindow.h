@@ -5,6 +5,7 @@
 #include <QFile>
 #include <QMessageBox>
 #include <QTableWidget>
+#include <QComboBox>
 
 
 class Subject {

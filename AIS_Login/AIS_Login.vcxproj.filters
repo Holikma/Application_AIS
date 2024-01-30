@@ -76,6 +76,7 @@
     <Text Include="Users_out.txt">
       <Filter>Data</Filter>
     </Text>
+    <Text Include="Student_1_Report.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Grades\PHD_Student_2_grades.csv">
