@@ -1,6 +1,6 @@
 Mathematics 1,1,Bachelors
 English 1,2,Bachelors
-Physics 1,3,Bachelors
+Physics 1,3,Bachelors,Frank Evans
 Introduction to Computer Science 1,2,Bachelors
 English Composition 1,3,Bachelors
 General Chemistry 1,4,Bachelors

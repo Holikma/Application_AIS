@@ -21,6 +21,12 @@
       <UniqueIdentifier>{639EADAA-A684-42e4-A9AD-28FC9BCB8F7C}</UniqueIdentifier>
       <Extensions>ts</Extensions>
     </Filter>
+    <Filter Include="Grades">
+      <UniqueIdentifier>{1254c1db-785d-4f68-bc84-12ad307946b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data">
+      <UniqueIdentifier>{ac0049d0-637b-49d4-8f5c-022f8c483b21}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="AIS_Login.qrc">
@@ -55,10 +61,40 @@
     </QtUic>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Users.txt" />
-    <Text Include="predmety_1.txt" />
-    <Text Include="predmety_2.txt" />
-    <Text Include="Users_out.txt" />
-    <Text Include="predmety_3.txt" />
+    <Text Include="predmety_1.txt">
+      <Filter>Data</Filter>
+    </Text>
+    <Text Include="predmety_2.txt">
+      <Filter>Data</Filter>
+    </Text>
+    <Text Include="predmety_3.txt">
+      <Filter>Data</Filter>
+    </Text>
+    <Text Include="Users.txt">
+      <Filter>Data</Filter>
+    </Text>
+    <Text Include="Users_out.txt">
+      <Filter>Data</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Grades\PHD_Student_2_grades.csv">
+      <Filter>Grades</Filter>
+    </None>
+    <None Include="Grades\Student_1_grades.csv">
+      <Filter>Grades</Filter>
+    </None>
+    <None Include="Grades\user4_grades.csv">
+      <Filter>Grades</Filter>
+    </None>
+    <None Include="Grades\user5_grades.csv">
+      <Filter>Grades</Filter>
+    </None>
+    <None Include="Grades\user8_grades.csv">
+      <Filter>Grades</Filter>
+    </None>
+    <None Include="Grades\user10_grades.csv">
+      <Filter>Grades</Filter>
+    </None>
   </ItemGroup>
 </Project>

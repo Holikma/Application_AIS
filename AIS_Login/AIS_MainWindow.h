@@ -33,7 +33,9 @@ class Enrolled_Subject : public Subject {
 		int Get_Attempts() { return Attempts; };
 		bool Get_Signed_for_Exam() { return Signed_for_Exam; };
 		void Set_Marks(QVector<QString> mark) { Marks = mark; };
+		void Set_Mark(int index, QString mark) { Marks[index] = mark; };
 		void Set_Attempts(int attempts) { Attempts = attempts; };
+		QString Get_Mark(int index) { return Marks[index]; };
 		void Set_Signed_for_Exam(bool signed_for_exam) { Signed_for_Exam = signed_for_exam; };
 };
 
@@ -126,6 +128,7 @@ class AIS_MainWindow : public QMainWindow{
 		void Sign_for_Exam();
 		void Load_New_Subjects();
 		void List_Awaiting_Exam_Students(Subject* subject);
+		void Grade_Student();
 
 	public:
 		void closeEvent(QCloseEvent* event) override;

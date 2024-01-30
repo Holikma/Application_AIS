@@ -618,6 +618,13 @@
              <item>
               <widget class="QTableWidget" name="List_Awaiting_Students_for_Exam"/>
              </item>
+             <item>
+              <widget class="QPushButton" name="Button_Grade">
+               <property name="text">
+                <string>Grade</string>
+               </property>
+              </widget>
+             </item>
             </layout>
            </widget>
           </item>

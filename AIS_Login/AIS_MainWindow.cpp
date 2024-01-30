@@ -49,6 +49,7 @@ AIS_MainWindow::AIS_MainWindow(QWidget* parent) : QMainWindow(parent) {
 	connect(ui.List_Teaching_Subjects, &QTableWidget::itemClicked, this, [this]() {List_Awaiting_Exam_Students(Get_Subject(ui.List_Teaching_Subjects->item(ui.List_Teaching_Subjects->currentRow(), 0)->text())); });
 	connect(ui.Button_Sign_for_Exam, SIGNAL(clicked()), this, SLOT(Sign_for_Exam()));
 	connect(ui.Button_Upload_UI, SIGNAL(clicked()), this, SLOT(Load_New_Subjects()));
+	connect(ui.Button_Grade, SIGNAL(clicked()), this, SLOT(Grade_Student()));
 }
 
 AIS_MainWindow::~AIS_MainWindow()
@@ -344,6 +345,7 @@ void AIS_MainWindow::Reset_UI() {
 	ui.List_Enrolled_Subjects->clear();
 	ui.List_Teaching_Subjects->clear();
 	ui.List_Subjects_for_Grading->clear();
+	ui.List_Awaiting_Students_for_Exam->clear();
 	ui.Line_Current_User->clear();
 	ui.Line_Current_User->setEnabled(true);
 	ui.TabWidget->setTabVisible(0, true);
@@ -449,17 +451,20 @@ void AIS_MainWindow::Enroll_Subject() {
 
 void AIS_MainWindow::List_Enrolled_Subjects(User* user) {
 	ui.List_Enrolled_Subjects->setRowCount(user->Get_Enrolled_Subjects().size());
-	ui.List_Enrolled_Subjects->setColumnCount(3);
+	ui.List_Enrolled_Subjects->setColumnCount(6);
 	ui.List_Enrolled_Subjects->setEditTriggers(QAbstractItemView::NoEditTriggers);
 	ui.List_Enrolled_Subjects->setSelectionBehavior(QAbstractItemView::SelectRows);
 	ui.List_Enrolled_Subjects->setSelectionMode(QAbstractItemView::SingleSelection);
 	ui.List_Enrolled_Subjects->setShowGrid(false);
 	ui.List_Enrolled_Subjects->verticalHeader()->hide();
-	ui.List_Enrolled_Subjects->setHorizontalHeaderLabels(QStringList() << "Name" << "Study Year" << "Type");
+	ui.List_Enrolled_Subjects->setHorizontalHeaderLabels(QStringList() << "Name" << "Study Year" << "Type" << "First Attempt" << "Second Attempt" << "Third Attempt");
 	for (int i = 0; i < user->Get_Enrolled_Subjects().size(); i++) {
 		ui.List_Enrolled_Subjects->setItem(i, 0, new QTableWidgetItem(user->Get_Enrolled_Subjects()[i]->Get_Name()));
 		ui.List_Enrolled_Subjects->setItem(i, 1, new QTableWidgetItem(user->Get_Enrolled_Subjects()[i]->Get_Study_Year()));
 		ui.List_Enrolled_Subjects->setItem(i, 2, new QTableWidgetItem(user->Get_Enrolled_Subjects()[i]->Get_Type()));
+		ui.List_Enrolled_Subjects->setItem(i, 3, new QTableWidgetItem(user->Get_Enrolled_Subjects()[i]->Get_Mark(0)));
+		ui.List_Enrolled_Subjects->setItem(i, 4, new QTableWidgetItem(user->Get_Enrolled_Subjects()[i]->Get_Mark(1)));
+		ui.List_Enrolled_Subjects->setItem(i, 5, new QTableWidgetItem(user->Get_Enrolled_Subjects()[i]->Get_Mark(2)));
 	}
 }
 
@@ -502,6 +507,12 @@ void AIS_MainWindow::List_Enrolled_Students(QTableWidget* sourceList) {
 	ui.List_Enrolled_Students->clear();
 	ui.List_Enrolled_Students->setRowCount(0);
 	ui.List_Enrolled_Students->setColumnCount(1);
+	ui.List_Enrolled_Students->setEditTriggers(QAbstractItemView::NoEditTriggers);
+	ui.List_Enrolled_Students->setSelectionBehavior(QAbstractItemView::SelectRows);
+	ui.List_Enrolled_Students->setSelectionMode(QAbstractItemView::SingleSelection);
+	ui.List_Enrolled_Students->setShowGrid(false);
+	ui.List_Enrolled_Students->verticalHeader()->hide();
+	ui.List_Enrolled_Students->horizontalHeader()->hide();
 	Subject* subject = Get_Subject(sourceList->item(sourceList->currentRow(), 0)->text());
 	for (int i = 0; i < Database[subject].size(); i++) {
 		int newRow = ui.List_Enrolled_Students->rowCount();
@@ -540,7 +551,7 @@ void AIS_MainWindow::Sign_for_Exam() {
 	QString subject_name = ui.List_Enrolled_Subjects->item(ui.List_Enrolled_Subjects->currentRow(), 0)->text();
 	Subject* subject = Get_Subject(subject_name);
 	for (int i = 0; i < current_user->Get_Enrolled_Subjects().size(); i++) {
-		if (current_user->Get_Enrolled_Subjects()[i]->Get_Name() == subject_name) {
+		if (current_user->Get_Enrolled_Subjects()[i]->Get_Name() == subject_name && current_user->Get_Enrolled_Subjects()[i]->Get_Attempts() < 3) {
 			current_user->Get_Enrolled_Subjects()[i]->Set_Signed_for_Exam(true);
 		}
 	}
@@ -556,7 +567,7 @@ void AIS_MainWindow::List_Signed_for_Exam_Subjects(User* user) {
 	ui.List_Subjects_for_Grading->setSelectionMode(QAbstractItemView::SingleSelection);
 	ui.List_Subjects_for_Grading->setShowGrid(false);
 	ui.List_Subjects_for_Grading->verticalHeader()->hide();
-	ui.List_Subjects_for_Grading->setHorizontalHeaderLabels(QStringList() << "Name");
+	ui.List_Subjects_for_Grading->horizontalHeader()->hide();
 	for (int i = 0; i < user->Get_Enrolled_Subjects().size(); i++) {
 		if (user->Get_Enrolled_Subjects()[i]->Get_Signed_for_Exam() == 1) {
 			int newRow = ui.List_Subjects_for_Grading->rowCount();
@@ -669,7 +680,7 @@ void AIS_MainWindow::List_Awaiting_Exam_Students(Subject* subject) {
 	ui.List_Awaiting_Students_for_Exam->setSelectionMode(QAbstractItemView::SingleSelection);
 	ui.List_Awaiting_Students_for_Exam->setShowGrid(false);
 	ui.List_Awaiting_Students_for_Exam->verticalHeader()->hide();
-	ui.List_Awaiting_Students_for_Exam->setHorizontalHeaderLabels(QStringList() << "Name");
+	ui.List_Awaiting_Students_for_Exam->horizontalHeader()->hide();
 	for (int i = 0; i < Database[subject].size(); i++) {
 		for (int j = 0; j < Database[subject][i]->Get_Enrolled_Subjects().size(); j++) {
 			if (Database[subject][i]->Get_Enrolled_Subjects()[j]->Get_Name() == subject->Get_Name()) {
@@ -681,4 +692,39 @@ void AIS_MainWindow::List_Awaiting_Exam_Students(Subject* subject) {
 			}
 		}
 	}
+}
+
+void AIS_MainWindow::Grade_Student() {
+	User* current_user = Get_User(ui.Line_Current_User->text());
+	QString subject_name = ui.List_Teaching_Subjects->item(ui.List_Teaching_Subjects->currentRow(), 0)->text();
+	Subject* subject = Get_Subject(subject_name);
+	QString student_name = ui.List_Awaiting_Students_for_Exam->item(ui.List_Awaiting_Students_for_Exam->currentRow(), 0)->text();
+	QMainWindow* grade_window = new QMainWindow();
+	QWidget* central_widget = new QWidget();
+	QVBoxLayout* layout = new QVBoxLayout();
+	QLabel* label = new QLabel("Grade: ");
+	QLineEdit* line_edit = new QLineEdit();
+	QPushButton* button = new QPushButton("Grade");
+	layout->addWidget(label);
+	layout->addWidget(line_edit);
+	layout->addWidget(button);
+	central_widget->setLayout(layout);
+	grade_window->setCentralWidget(central_widget);
+	grade_window->show();
+	connect(button, &QPushButton::clicked, this, [this, grade_window, line_edit, current_user, subject, student_name]() {
+		for (int i = 0; i < Database[subject].size(); i++) {
+			if (Database[subject][i]->Get_Name() + " " + Database[subject][i]->Get_Surname() == student_name) {
+				for (int j = 0; j < Database[subject][i]->Get_Enrolled_Subjects().size(); j++) {
+					if (Database[subject][i]->Get_Enrolled_Subjects()[j]->Get_Name() == subject->Get_Name()) {
+						Database[subject][i]->Get_Enrolled_Subjects()[j]->Set_Mark(Database[subject][i]->Get_Enrolled_Subjects()[j]->Get_Attempts(), line_edit->text());
+						Database[subject][i]->Get_Enrolled_Subjects()[j]->Set_Attempts(Database[subject][i]->Get_Enrolled_Subjects()[j]->Get_Attempts() + 1);
+						Database[subject][i]->Get_Enrolled_Subjects()[j]->Set_Signed_for_Exam(false);
+						grade_window->close();
+						List_Awaiting_Exam_Students(subject);
+						return;
+					}
+				}
+			}
+		}
+	});
 }
