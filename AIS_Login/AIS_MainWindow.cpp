@@ -242,11 +242,11 @@ void AIS_MainWindow::Set_Teacher_Ui(User* user) {
 	ui.TabWidget->setTabVisible(3, false);
 	ui.Line_Current_User->setText(user->Get_Login());
 	ui.Line_Current_User->setEnabled(false);
+	Load_Marks_from_File();
 	List_Subjects_to_Teach();
 	Set_Personal_Info(user);
 	List_Teaching_Subjects(user);
 	List_Enrolled_Subjects(user);
-	Load_Marks_from_File();
 	List_Signed_for_Exam_Subjects(user);
 }
 
@@ -269,10 +269,11 @@ void AIS_MainWindow::Set_PhD_Student_Ui(User* user) {
 	ui.Line_Current_User->setText(user->Get_Login());
 	ui.Line_Current_User->setEnabled(false);
 	Load_Marks_from_File();
-	List_Subjects(user);
-	List_Enrolled_Subjects(user);
 	Set_Personal_Info(user);
 	List_Subjects_to_Teach();
+	List_Subjects(user);
+	List_Teaching_Subjects(user);
+	List_Enrolled_Subjects(user);
 	List_Signed_for_Exam_Subjects(user);
 }
 
@@ -461,7 +462,7 @@ void AIS_MainWindow::Enroll_Subject() {
 
 void AIS_MainWindow::List_Enrolled_Subjects(User* user) {
 	ui.List_Enrolled_Subjects->setRowCount(user->Get_Enrolled_Subjects().size());
-	ui.List_Enrolled_Subjects->setColumnCount(6);
+	ui.List_Enrolled_Subjects->setColumnCount(7);
 	ui.List_Enrolled_Subjects->setEditTriggers(QAbstractItemView::NoEditTriggers);
 	ui.List_Enrolled_Subjects->setSelectionBehavior(QAbstractItemView::SelectRows);
 	ui.List_Enrolled_Subjects->setSelectionMode(QAbstractItemView::SingleSelection);
@@ -469,7 +470,7 @@ void AIS_MainWindow::List_Enrolled_Subjects(User* user) {
 	ui.List_Enrolled_Subjects->verticalHeader()->hide();
 	ui.List_Enrolled_Subjects->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 	ui.List_Enrolled_Subjects->resizeColumnsToContents();
-	ui.List_Enrolled_Subjects->setHorizontalHeaderLabels(QStringList() << "Name of the Enrolled Subject" << "Study Year" << "Type" << "First Attempt" << "Second Attempt" << "Third Attempt");
+	ui.List_Enrolled_Subjects->setHorizontalHeaderLabels(QStringList() << "Name of the Enrolled Subject" << "Study Year" << "Type" << "First Attempt" << "Second Attempt" << "Third Attempt" << "Attempts Left");
 	for (int i = 0; i < user->Get_Enrolled_Subjects().size(); i++) {
 		ui.List_Enrolled_Subjects->setItem(i, 0, new QTableWidgetItem(user->Get_Enrolled_Subjects()[i]->Get_Name()));
 		ui.List_Enrolled_Subjects->setItem(i, 1, new QTableWidgetItem(user->Get_Enrolled_Subjects()[i]->Get_Study_Year()));
@@ -477,6 +478,7 @@ void AIS_MainWindow::List_Enrolled_Subjects(User* user) {
 		ui.List_Enrolled_Subjects->setItem(i, 3, new QTableWidgetItem(user->Get_Enrolled_Subjects()[i]->Get_Mark(0)));
 		ui.List_Enrolled_Subjects->setItem(i, 4, new QTableWidgetItem(user->Get_Enrolled_Subjects()[i]->Get_Mark(1)));
 		ui.List_Enrolled_Subjects->setItem(i, 5, new QTableWidgetItem(user->Get_Enrolled_Subjects()[i]->Get_Mark(2)));
+		ui.List_Enrolled_Subjects->setItem(i, 6, new QTableWidgetItem(QString::number(user->Get_Enrolled_Subjects()[i]->Get_Attempts())));
 	}
 }
 
@@ -489,7 +491,9 @@ void AIS_MainWindow::List_Subjects_to_Teach() {
 	ui.List_Subjects_to_Teach->setSelectionMode(QAbstractItemView::SingleSelection);
 	ui.List_Subjects_to_Teach->setShowGrid(false);
 	ui.List_Subjects_to_Teach->verticalHeader()->hide();
+
 	ui.List_Subjects_to_Teach->setHorizontalHeaderLabels(QStringList() << "Name" << "Teacher");
+	ui.List_Subjects_to_Teach->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
 	for (int i = 0; i < Get_Subjects().size(); i++) {
 		int newRow = ui.List_Subjects_to_Teach->rowCount();
@@ -509,6 +513,8 @@ void AIS_MainWindow::List_Teaching_Subjects(User* user) {
 	ui.List_Teaching_Subjects->setShowGrid(false);
 	ui.List_Teaching_Subjects->verticalHeader()->hide();
 	ui.List_Teaching_Subjects->horizontalHeader()->hide();
+	ui.List_Teaching_Subjects->setHorizontalHeaderLabels(QStringList() << "Name" << "Teacher");
+	ui.List_Teaching_Subjects->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 	for (int i = 0; i < user->Get_Teaching_Subjects().size(); i++) {
 		ui.List_Teaching_Subjects->setItem(i, 0, new QTableWidgetItem(user->Get_Teaching_Subjects()[i]->Get_Name()));
 		ui.List_Teaching_Subjects->setItem(i, 1, new QTableWidgetItem(user->Get_Teaching_Subjects()[i]->Get_Teacher()));
@@ -580,6 +586,7 @@ void AIS_MainWindow::List_Signed_for_Exam_Subjects(User* user) {
 	ui.List_Subjects_for_Grading->setShowGrid(false);
 	ui.List_Subjects_for_Grading->verticalHeader()->hide();
 	ui.List_Subjects_for_Grading->horizontalHeader()->hide();
+	ui.List_Subjects_for_Grading->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 	for (int i = 0; i < user->Get_Enrolled_Subjects().size(); i++) {
 		if (user->Get_Enrolled_Subjects()[i]->Get_Signed_for_Exam() == 1) {
 			int newRow = ui.List_Subjects_for_Grading->rowCount();
