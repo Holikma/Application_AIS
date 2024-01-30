@@ -14,7 +14,6 @@ AIS_Login::~AIS_Login()
 void AIS_Login::Set_Environment() {
 	mainWindow->Load_Subjects();
 	mainWindow->Load_Users();
-	mainWindow->Print_Database();
 	Set_Users();
 }
 

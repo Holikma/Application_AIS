@@ -315,21 +315,23 @@ void AIS_MainWindow::Set_Personal_Info(User* user) {
 void AIS_MainWindow::List_Subjects(User* user) {
 	ui.List_Subjects->clear();
 	ui.List_Subjects->setRowCount(0);
-	ui.List_Subjects->setColumnCount(2);
+	ui.List_Subjects->setColumnCount(3);
 	ui.List_Subjects->setEditTriggers(QAbstractItemView::NoEditTriggers);
 	ui.List_Subjects->setSelectionBehavior(QAbstractItemView::SelectRows);
 	ui.List_Subjects->setSelectionMode(QAbstractItemView::SingleSelection);
 	ui.List_Subjects->setShowGrid(false);
 	ui.List_Subjects->verticalHeader()->hide();
-	ui.List_Subjects->horizontalHeader()->hide();
+	ui.List_Subjects->setHorizontalHeaderLabels(QStringList() << "Name" << "Teacher" << "Type");
 	ui.List_Subjects->setColumnWidth(0, 300);
 	ui.List_Subjects->setColumnWidth(1, 150);
+	ui.List_Subjects->setColumnWidth(2, 150);
 	for (int i = 0; i < Subjects.size(); i++) {
 		if (Subjects[i]->Get_Study_Year() == user->Get_Year()) {
 			int newRow = ui.List_Subjects->rowCount();
 			ui.List_Subjects->insertRow(newRow);
 			ui.List_Subjects->setItem(newRow, 0, new QTableWidgetItem(Subjects[i]->Get_Name()));
 			ui.List_Subjects->setItem(newRow, 1, new QTableWidgetItem(Subjects[i]->Get_Teacher()));
+			ui.List_Subjects->setItem(newRow, 2, new QTableWidgetItem(Subjects[i]->Get_Type()));
 		}
 	}
 }
@@ -372,6 +374,13 @@ void AIS_MainWindow::Reset_UI() {
 	ui.List_Teaching_Subjects->clear();
 	ui.List_Subjects_for_Grading->clear();
 	ui.List_Awaiting_Students_for_Exam->clear();
+	ui.Line_Add_Login->clear();
+	ui.Line_Add_Password->clear();
+	ui.Line_Add_Name->clear();
+	ui.Line_Add_Surname->clear();
+	ui.Line_Add_Age->clear();
+	ui.Line_Add_Year->clear();
+
 	ui.Line_Current_User->clear();
 	ui.Line_Current_User->setEnabled(true);
 	ui.TabWidget->setTabVisible(0, true);
@@ -795,24 +804,25 @@ void AIS_MainWindow::Remove_User_from_Subject_Database(User* user, Subject* subj
 void AIS_MainWindow::Add_New_User() {
 	User* user;
 	if (ui.Box_Type->currentText() == "Student") {
-		User* user = new Student(ui.Line_Add_Login->text(), ui.Line_Add_Password->text(), ui.Box_Type->currentText(), ui.Line_Add_Name->text(), ui.Line_Add_Surname->text(), ui.Line_Age->text(), ui.Line_Add_Year->text(), QVector<Enrolled_Subject*>());
+		User* user = new Student(ui.Line_Add_Login->text(), ui.Line_Add_Password->text(), ui.Box_Type->currentText(), ui.Line_Add_Name->text(), ui.Line_Add_Surname->text(), ui.Line_Add_Age->text(), ui.Line_Add_Year->text(), QVector<Enrolled_Subject*>());
 		QSharedPointer<User> userSharedPointer(user);
 		Users.append(userSharedPointer);
 	}
 	else if (ui.Box_Type->currentText() == "Teacher") {
-		User* user = new Employee(ui.Line_Add_Login->text(), ui.Line_Add_Password->text(), ui.Box_Type->currentText(), ui.Line_Add_Name->text(), ui.Line_Add_Surname->text(), ui.Line_Age->text(), "Teacher", QVector<Subject*>());
+		User* user = new Employee(ui.Line_Add_Login->text(), ui.Line_Add_Password->text(), ui.Box_Type->currentText(), ui.Line_Add_Name->text(), ui.Line_Add_Surname->text(), ui.Line_Add_Age->text(), "Teacher", QVector<Subject*>());
 		QSharedPointer<User> userSharedPointer(user);
 		Users.append(userSharedPointer);
 	}
 	else if (ui.Box_Type->currentText() == "Admin") {
-		User* user = new Employee(ui.Line_Add_Login->text(), ui.Line_Add_Password->text(), ui.Box_Type->currentText(), ui.Line_Add_Name->text(), ui.Line_Add_Surname->text(), ui.Line_Age->text(), "Admin", QVector<Subject*>());
+		User* user = new Employee(ui.Line_Add_Login->text(), ui.Line_Add_Password->text(), ui.Box_Type->currentText(), ui.Line_Add_Name->text(), ui.Line_Add_Surname->text(), ui.Line_Add_Age->text(), "Admin", QVector<Subject*>());
 		QSharedPointer<User> userSharedPointer(user);
 		Users.append(userSharedPointer);
 	}
 	else if (ui.Box_Type->currentText() == "PhD_Student") {
-		User* user = new Student(ui.Line_Add_Login->text(), ui.Line_Add_Password->text(), ui.Box_Type->currentText(), ui.Line_Add_Name->text(), ui.Line_Add_Surname->text(), ui.Line_Age->text(), ui.Line_Add_Year->text(), QVector<Enrolled_Subject*>());
+		User* user = new Student(ui.Line_Add_Login->text(), ui.Line_Add_Password->text(), ui.Box_Type->currentText(), ui.Line_Add_Name->text(), ui.Line_Add_Surname->text(), ui.Line_Add_Age->text(), ui.Line_Add_Year->text(), QVector<Enrolled_Subject*>());
 		QSharedPointer<User> userSharedPointer(user);
 		Users.append(userSharedPointer);
 	}
+	Save_Users_to_File();
 	QMessageBox::information(this, "User", "User added successfully!");
 }

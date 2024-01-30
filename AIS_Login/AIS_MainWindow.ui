@@ -176,7 +176,7 @@
          <string/>
         </property>
         <property name="currentIndex">
-         <number>3</number>
+         <number>0</number>
         </property>
         <widget class="QWidget" name="Subjects_enrollment">
          <property name="maximumSize">
@@ -203,7 +203,20 @@
               </widget>
              </item>
              <item row="0" column="0" colspan="2">
-              <widget class="QTableWidget" name="List_Subjects"/>
+              <widget class="QTableWidget" name="List_Subjects">
+               <property name="frameShadow">
+                <enum>QFrame::Sunken</enum>
+               </property>
+               <property name="lineWidth">
+                <number>1</number>
+               </property>
+               <property name="midLineWidth">
+                <number>0</number>
+               </property>
+               <property name="sizeAdjustPolicy">
+                <enum>QAbstractScrollArea::AdjustIgnored</enum>
+               </property>
+              </widget>
              </item>
              <item row="1" column="0">
               <spacer name="horizontalSpacer_17">
@@ -246,6 +259,12 @@
                    <width>600</width>
                    <height>0</height>
                   </size>
+                 </property>
+                 <property name="lineWidth">
+                  <number>1</number>
+                 </property>
+                 <property name="midLineWidth">
+                  <number>0</number>
                  </property>
                 </widget>
                </item>
@@ -697,7 +716,7 @@
               </widget>
              </item>
              <item row="5" column="1">
-              <widget class="QLineEdit" name="Add_Age"/>
+              <widget class="QLineEdit" name="Line_Add_Age"/>
              </item>
              <item row="7" column="0" colspan="2">
               <widget class="QPushButton" name="Button_Add_New_User">
