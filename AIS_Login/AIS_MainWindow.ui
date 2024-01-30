@@ -176,7 +176,7 @@
          <string/>
         </property>
         <property name="currentIndex">
-         <number>2</number>
+         <number>3</number>
         </property>
         <widget class="QWidget" name="Subjects_enrollment">
          <property name="maximumSize">
@@ -266,7 +266,7 @@
                 </spacer>
                </item>
                <item row="1" column="1">
-                <widget class="QPushButton" name="pushButton_2">
+                <widget class="QPushButton" name="Button_Remove">
                  <property name="text">
                   <string>Remove</string>
                  </property>
@@ -321,8 +321,21 @@
                </property>
               </spacer>
              </item>
-             <item row="8" column="2">
-              <spacer name="horizontalSpacer_8">
+             <item row="13" column="1">
+              <spacer name="verticalSpacer">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="7" column="2">
+              <spacer name="horizontalSpacer_7">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -334,6 +347,85 @@
                </property>
               </spacer>
              </item>
+             <item row="2" column="2">
+              <spacer name="horizontalSpacer_9">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="6" column="0">
+              <widget class="QLabel" name="Label_Surname">
+               <property name="text">
+                <string>Surname:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1">
+              <widget class="QLineEdit" name="Line_Type"/>
+             </item>
+             <item row="4" column="1">
+              <widget class="QLineEdit" name="Line_Name"/>
+             </item>
+             <item row="9" column="5">
+              <spacer name="horizontalSpacer_16">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="6" column="1">
+              <widget class="QLineEdit" name="Line_Surname"/>
+             </item>
+             <item row="8" column="0">
+              <widget class="QLabel" name="Label_Priviliges">
+               <property name="text">
+                <string>Priviliges:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="0">
+              <widget class="QLabel" name="Label_Name">
+               <property name="text">
+                <string>Name:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="Label_Type">
+               <property name="text">
+                <string>Type:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="9" column="3">
+              <spacer name="horizontalSpacer_14">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="2" column="1">
+              <widget class="QLineEdit" name="Line_Password_Info"/>
+             </item>
              <item row="0" column="0">
               <widget class="QLabel" name="Label_Login">
                <property name="text">
@@ -341,11 +433,34 @@
                </property>
               </widget>
              </item>
-             <item row="9" column="1">
-              <widget class="QLineEdit" name="Line_Education"/>
+             <item row="2" column="0">
+              <widget class="QLabel" name="Label_Password">
+               <property name="text">
+                <string>Password:</string>
+               </property>
+              </widget>
              </item>
              <item row="6" column="2">
               <spacer name="horizontalSpacer_6">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="0" column="1">
+              <widget class="QLineEdit" name="Line_Login_Info"/>
+             </item>
+             <item row="7" column="1">
+              <widget class="QLineEdit" name="Line_Age"/>
+             </item>
+             <item row="4" column="2">
+              <spacer name="horizontalSpacer_5">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -370,48 +485,8 @@
                </property>
               </spacer>
              </item>
-             <item row="6" column="1">
-              <widget class="QLineEdit" name="Line_Surname"/>
-             </item>
-             <item row="7" column="1">
-              <widget class="QLineEdit" name="Line_Age"/>
-             </item>
-             <item row="4" column="0">
-              <widget class="QLabel" name="Label_Name">
-               <property name="text">
-                <string>Name:</string>
-               </property>
-              </widget>
-             </item>
-             <item row="9" column="0">
-              <widget class="QLabel" name="Education">
-               <property name="text">
-                <string>Education:</string>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="0">
-              <widget class="QLabel" name="Label_Type">
-               <property name="text">
-                <string>Type:</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="1">
-              <widget class="QLineEdit" name="Line_Login_Info"/>
-             </item>
-             <item row="3" column="1">
-              <widget class="QLineEdit" name="Line_Type"/>
-             </item>
-             <item row="8" column="0">
-              <widget class="QLabel" name="Label_Priviliges">
-               <property name="text">
-                <string>Priviliges:</string>
-               </property>
-              </widget>
-             </item>
-             <item row="7" column="2">
-              <spacer name="horizontalSpacer_7">
+             <item row="3" column="2">
+              <spacer name="horizontalSpacer_13">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -423,47 +498,8 @@
                </property>
               </spacer>
              </item>
-             <item row="13" column="1">
-              <spacer name="verticalSpacer">
-               <property name="orientation">
-                <enum>Qt::Vertical</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>20</width>
-                 <height>40</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item row="8" column="1">
-              <widget class="QLineEdit" name="Line_Priviliges"/>
-             </item>
-             <item row="2" column="0">
-              <widget class="QLabel" name="Label_Password">
-               <property name="text">
-                <string>Password:</string>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="2">
-              <spacer name="horizontalSpacer_9">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item row="2" column="1">
-              <widget class="QLineEdit" name="Line_Password_Info"/>
-             </item>
-             <item row="9" column="3">
-              <spacer name="horizontalSpacer_14">
+             <item row="8" column="2">
+              <spacer name="horizontalSpacer_8">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -488,22 +524,6 @@
                </property>
               </spacer>
              </item>
-             <item row="4" column="2">
-              <spacer name="horizontalSpacer_5">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item row="4" column="1">
-              <widget class="QLineEdit" name="Line_Name"/>
-             </item>
              <item row="7" column="0">
               <widget class="QLabel" name="Label_Age">
                <property name="text">
@@ -511,58 +531,15 @@
                </property>
               </widget>
              </item>
-             <item row="9" column="2">
-              <spacer name="horizontalSpacer_11">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item row="6" column="0">
-              <widget class="QLabel" name="Label_Surname">
-               <property name="text">
-                <string>Surname:</string>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="2">
-              <spacer name="horizontalSpacer_13">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item row="9" column="5">
-              <spacer name="horizontalSpacer_16">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item row="10" column="0" colspan="3">
+             <item row="9" column="0" colspan="3">
               <widget class="QPushButton" name="Button_Generate_Report">
                <property name="text">
                 <string>Generate Report</string>
                </property>
               </widget>
+             </item>
+             <item row="8" column="1">
+              <widget class="QLineEdit" name="lineEdit"/>
              </item>
             </layout>
            </widget>
@@ -680,7 +657,7 @@
               </widget>
              </item>
              <item row="0" column="1">
-              <widget class="QLineEdit" name="lineEdit_9"/>
+              <widget class="QLineEdit" name="Line_Add_Login"/>
              </item>
              <item row="1" column="0">
               <widget class="QLabel" name="label_12">
@@ -690,46 +667,46 @@
               </widget>
              </item>
              <item row="1" column="1">
-              <widget class="QLineEdit" name="lineEdit_10"/>
+              <widget class="QLineEdit" name="Line_Add_Password"/>
              </item>
-             <item row="2" column="0">
+             <item row="3" column="0">
               <widget class="QLabel" name="label_13">
                <property name="text">
                 <string>Name:</string>
                </property>
               </widget>
              </item>
-             <item row="2" column="1">
-              <widget class="QLineEdit" name="lineEdit_11"/>
+             <item row="3" column="1">
+              <widget class="QLineEdit" name="Line_Add_Name"/>
              </item>
-             <item row="3" column="0">
+             <item row="4" column="0">
               <widget class="QLabel" name="label_14">
                <property name="text">
                 <string>Surname:</string>
                </property>
               </widget>
              </item>
-             <item row="3" column="1">
-              <widget class="QLineEdit" name="lineEdit_12"/>
+             <item row="4" column="1">
+              <widget class="QLineEdit" name="Line_Add_Surname"/>
              </item>
-             <item row="4" column="0">
+             <item row="5" column="0">
               <widget class="QLabel" name="label_15">
                <property name="text">
                 <string>Age:</string>
                </property>
               </widget>
              </item>
-             <item row="4" column="1">
-              <widget class="QLineEdit" name="lineEdit_13"/>
+             <item row="5" column="1">
+              <widget class="QLineEdit" name="Add_Age"/>
              </item>
-             <item row="6" column="0" colspan="2">
-              <widget class="QPushButton" name="pushButton_3">
+             <item row="7" column="0" colspan="2">
+              <widget class="QPushButton" name="Button_Add_New_User">
                <property name="text">
                 <string>Create</string>
                </property>
               </widget>
              </item>
-             <item row="7" column="0">
+             <item row="8" column="0">
               <spacer name="verticalSpacer_2">
                <property name="orientation">
                 <enum>Qt::Vertical</enum>
@@ -742,22 +719,53 @@
                </property>
               </spacer>
              </item>
-             <item row="8" column="0">
+             <item row="9" column="0">
               <widget class="QPushButton" name="Button_Upload_UI">
                <property name="text">
                 <string>Upload UI</string>
                </property>
               </widget>
              </item>
-             <item row="5" column="0">
-              <widget class="QLabel" name="label_4">
+             <item row="6" column="0">
+              <widget class="QLabel" name="Label_Year">
                <property name="text">
-                <string>Priviliges:</string>
+                <string>Year:</string>
                </property>
               </widget>
              </item>
-             <item row="5" column="1">
-              <widget class="QLineEdit" name="lineEdit_2"/>
+             <item row="6" column="1">
+              <widget class="QLineEdit" name="Line_Add_Year"/>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="Lable_Type">
+               <property name="text">
+                <string>Type:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QComboBox" name="Box_Type">
+               <item>
+                <property name="text">
+                 <string>Student</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>PhD_Student</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Teacher</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Admin</string>
+                </property>
+               </item>
+              </widget>
              </item>
             </layout>
            </widget>

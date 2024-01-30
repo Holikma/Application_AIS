@@ -62,6 +62,7 @@ class User {
 		virtual QString Get_Position() { return ""; };
 		virtual void Clear_Enrolled_Subjects() {};
 		virtual void Clear_Teaching_Subjects() {};
+		virtual void Remove_Enrolled_Subject(Subject* subject) {};
 };
 
 class Person : public User{
@@ -99,6 +100,7 @@ class Student : public Person {
 		QString Get_Year() override { return Year; };
 		QVector<Enrolled_Subject*> Get_Enrolled_Subjects() override { return Enrolled_Subjects; };
 		void Clear_Enrolled_Subjects() override { Enrolled_Subjects.clear(); };
+		void Remove_Enrolled_Subject(Subject* subject) override;
 
 };
 
@@ -130,6 +132,8 @@ class AIS_MainWindow : public QMainWindow{
 		void Load_New_Subjects();
 		void List_Awaiting_Exam_Students(Subject* subject);
 		void Grade_Student();
+		void Unenroll_Subject();
+		void Add_New_User();
 
 	public:
 		void closeEvent(QCloseEvent* event) override;
@@ -162,6 +166,7 @@ class AIS_MainWindow : public QMainWindow{
 		void Save_Marks_to_File();
 		void Load_Marks_from_File();
 		void Save_Subjects_to_File();
+		void Remove_User_from_Subject_Database(User* user, Subject* subject);
 		
 		
 };

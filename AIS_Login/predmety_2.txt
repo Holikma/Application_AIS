@@ -1,20 +1,22 @@
-﻿Mathematics_2,2023,PHD
-English_2,2023,BCS
-Physics_2,2023,PHD
-Chemistry_2,2023,BCS
-Biology_2,2023,PHD
-History_2,2023,BCS
-Geography_2,2023,PHD
-Computer_Science_2,2023,BCS
-Art_2,2023,PHD
-Physical_Education_2,2023,BCS
-Mathematics_2,2024,PHD
-English_2,2024,BCS
-Physics_2,2024,PHD
-Chemistry_2,2024,BCS
-Biology_2,2024,PHD
-History_2,2024,BCS
-Geography_2,2024,PHD
-Computer_Science_2,2024,BCS
-Art_2,2024,PHD
-Physical_Education_2,2024,BCS
+﻿Cognitive Psychology 3,5,Bachelors
+World History 3,6,Ph.D
+Philosophy of Science 3,7,Ph.D
+Advanced Calculus 4,1,Bachelors
+Software Engineering 4,2,Bachelors
+Creative Writing 4,3,Bachelors
+Quantum Physics 4,4,Bachelors
+Digital Communication Systems 4,5,Bachelors
+Ecological Studies 4,6,Ph.D
+French Literature 4,7,Ph.D
+Machine Learning 5,1,Bachelors
+Algorithmic Game Theory 5,2,Bachelors
+Comparative Linguistics 5,3,Bachelors
+Nanotechnology 5,4,Bachelors
+Neuroscience 5,5,Bachelors
+History of Art 5,6,Ph.D
+Cultural Anthropology 5,7,Ph.D
+Robotics and Automation 6,1,Bachelors
+Biomedical Engineering 6,2,Bachelors
+Astrophysics 6,3,Bachelors
+International Relations 6,4,Bachelors
+Political Philosophy 6,5,Bachelors

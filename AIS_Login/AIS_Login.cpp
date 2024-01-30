@@ -20,7 +20,6 @@ void AIS_Login::Set_Environment() {
 
 
 void AIS_Login::Check_Login() {
-
 	User* user = mainWindow->Get_User(ui.List_Users->currentItem()->text());
 	QString password = ui.Line_Password->text();
 	if (user->Get_Password() == password) {
@@ -46,6 +45,7 @@ void AIS_Login::Check_Login() {
 }
 
 void AIS_Login::Set_Users() {
+	ui.List_Users->clear();
 	for (int i = 0; i < mainWindow->Get_Users().size(); i++) {
 		ui.List_Users->addItem(mainWindow->Get_Users()[i]->Get_Login());
 	}

@@ -22,6 +22,15 @@ Student::Student(QString login, QString password, QString type, QString name, QS
     Enrolled_Subjects = sub;
 }
 
+void Student::Remove_Enrolled_Subject(Subject* subject) {
+	for (int i = 0; i < Enrolled_Subjects.size(); i++) {
+		if (Enrolled_Subjects[i]->Get_Name() == subject->Get_Name()) {
+			Enrolled_Subjects.remove(i);
+			return;
+		}
+	}
+}
+
 Phd_Student::Phd_Student(QString login, QString password, QString type, QString name, QString surname, QString age, QString year, QVector<Subject*> teaching_subjects, QVector<Enrolled_Subject*> enrolled_subjects)
 	: Student(login, password, type, name, surname, age, year, enrolled_subjects) {
 	Teaching_Subjects = teaching_subjects;
@@ -50,6 +59,8 @@ AIS_MainWindow::AIS_MainWindow(QWidget* parent) : QMainWindow(parent) {
 	connect(ui.Button_Sign_for_Exam, SIGNAL(clicked()), this, SLOT(Sign_for_Exam()));
 	connect(ui.Button_Upload_UI, SIGNAL(clicked()), this, SLOT(Load_New_Subjects()));
 	connect(ui.Button_Grade, SIGNAL(clicked()), this, SLOT(Grade_Student()));
+	connect(ui.Button_Remove, SIGNAL(clicked()), this, SLOT(Unenroll_Subject()));
+	connect(ui.Button_Add_New_User, SIGNAL(clicked()), this, SLOT(Add_New_User()));
 }
 
 AIS_MainWindow::~AIS_MainWindow()
@@ -755,4 +766,53 @@ void AIS_MainWindow::Grade_Student() {
 			}
 		}
 	});
+}
+
+void AIS_MainWindow::Unenroll_Subject() {
+	User* current_user = Get_User(ui.Line_Current_User->text());
+	QString subject_name = ui.List_Enrolled_Subjects->item(ui.List_Enrolled_Subjects->currentRow(), 0)->text();
+	Subject* subject = Get_Subject(subject_name);
+	for (int i = 0; i < current_user->Get_Enrolled_Subjects().size(); i++) {
+		if (current_user->Get_Enrolled_Subjects()[i]->Get_Name() == subject_name) {
+			current_user->Remove_Enrolled_Subject(subject);
+			Remove_User_from_Subject_Database(current_user, subject);
+			List_Enrolled_Subjects(current_user);
+			List_Signed_for_Exam_Subjects(current_user);
+			return;
+		}
+	}
+}
+
+void AIS_MainWindow::Remove_User_from_Subject_Database(User* user, Subject* subject) {
+	for (int i = 0; i < Database[subject].size(); i++) {
+		if (Database[subject][i]->Get_Login() == user->Get_Login()) {
+			Database[subject].remove(i);
+			return;
+		}
+	}
+}
+
+void AIS_MainWindow::Add_New_User() {
+	User* user;
+	if (ui.Box_Type->currentText() == "Student") {
+		User* user = new Student(ui.Line_Add_Login->text(), ui.Line_Add_Password->text(), ui.Box_Type->currentText(), ui.Line_Add_Name->text(), ui.Line_Add_Surname->text(), ui.Line_Age->text(), ui.Line_Add_Year->text(), QVector<Enrolled_Subject*>());
+		QSharedPointer<User> userSharedPointer(user);
+		Users.append(userSharedPointer);
+	}
+	else if (ui.Box_Type->currentText() == "Teacher") {
+		User* user = new Employee(ui.Line_Add_Login->text(), ui.Line_Add_Password->text(), ui.Box_Type->currentText(), ui.Line_Add_Name->text(), ui.Line_Add_Surname->text(), ui.Line_Age->text(), "Teacher", QVector<Subject*>());
+		QSharedPointer<User> userSharedPointer(user);
+		Users.append(userSharedPointer);
+	}
+	else if (ui.Box_Type->currentText() == "Admin") {
+		User* user = new Employee(ui.Line_Add_Login->text(), ui.Line_Add_Password->text(), ui.Box_Type->currentText(), ui.Line_Add_Name->text(), ui.Line_Add_Surname->text(), ui.Line_Age->text(), "Admin", QVector<Subject*>());
+		QSharedPointer<User> userSharedPointer(user);
+		Users.append(userSharedPointer);
+	}
+	else if (ui.Box_Type->currentText() == "PhD_Student") {
+		User* user = new Student(ui.Line_Add_Login->text(), ui.Line_Add_Password->text(), ui.Box_Type->currentText(), ui.Line_Add_Name->text(), ui.Line_Add_Surname->text(), ui.Line_Age->text(), ui.Line_Add_Year->text(), QVector<Enrolled_Subject*>());
+		QSharedPointer<User> userSharedPointer(user);
+		Users.append(userSharedPointer);
+	}
+	QMessageBox::information(this, "User", "User added successfully!");
 }
